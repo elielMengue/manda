@@ -15,10 +15,72 @@ datasource db {
 }
 
 model User {
-  id      Int      @id @default(autoincrement())
-  name    String?  @db.VarChar(255)
-  email   String   @unique @db.VarChar(255)
-  password String? @db.VarChar(255)
+  id        Int      @id @default(autoincrement())
+  firstName String   @db.VarChar(255)
+  lastName  String   @db.VarChar(255)
+  email     String   @unique @db.VarChar(255)
+  password  String?  @db.VarChar(255)
   createdAt DateTime @default(now()) @db.Timestamp(6)
   updatedAt DateTime @updatedAt @db.Timestamp(6)
 }
+
+model Apprenant {
+  id    Int  @id @default(autoincrement())
+}
+
+model Mentor {
+  id    Int  @id @default(autoincrement())
+}
+
+model Partenaire {
+  id    Int  @id @default(autoincrement())
+}
+
+
+model Admin {
+  id    Int  @id @default(autoincrement())
+}
+
+enum Role {
+  Admin
+  Apprenant
+  Mentor
+  Partenaire
+}
+
+model Inscription {
+  id    Int  @id @default(autoincrement())
+}
+
+model Cours {
+  id Int @id @default(autoincrement())
+}
+
+model Module {
+  id    Int  @id @default(autoincrement())
+}
+
+model Leçon {
+  id    Int  @id @default(autoincrement())
+}
+
+model Quiz {
+  id    Int  @id @default(autoincrement())
+}
+
+model Question_quiz {
+  id    Int  @id @default(autoincrement())
+}
+
+model Option_reponse {
+  id    Int  @id @default(autoincrement())
+}
+
+model Reponse_correct {
+  id    Int  @id @default(autoincrement())
+}
+
+model Certificat {
+  id    Int  @id @default(autoincrement())
+}
+
