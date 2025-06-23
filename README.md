@@ -68,10 +68,10 @@ Donner aux jeunes, où qu’ils soient, les moyens de se former aux métiers du 
 
 ```mermaid
 flowchart TD
-    A[Utilisateur] -->|Accède| B[Frontend - Next.js]
-    B --> C[Custom Auth API (JWT)]
-    B --> D[Railway - PostgreSQL DB]
-    B --> E[Railway - Storage (Cloudinary/S3/...)]
-    D --> F[Middleware Auth / RLS-like]
+    A[Utilisateur] --> B[Frontend (Next.js)]
+    B --> C[Auth API - JWT]
+    B --> D[Railway - PostgreSQL]
+    B --> E[Railway - Storage]
+    D --> F[Middleware Auth]
     C --> F
-    F -->|Données filtrées| B
+    F --> B
