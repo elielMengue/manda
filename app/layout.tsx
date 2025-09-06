@@ -1,6 +1,9 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
+
+export const dynamic = 'force-dynamic';
+
 import Providers from "../components/Providers";
 import Sidebar from "../components/Sidebar";
 import PublicHeader from "../components/PublicHeader";
