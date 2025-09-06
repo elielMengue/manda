@@ -1,7 +1,9 @@
 import { getServerSession } from "next-auth";
-import { authOptions } from "../../lib/auth";
+import { authOptions, type BackendFields } from "../../lib/auth";
 import { getMyProfile } from "../../lib/api/profile";
 import ProfileCreateForms from "../../components/ProfileCreateForms";
+import Link from "next/link";
+import Image from "next/image";
 
 export default async function ProfilePage() {
   const session = await getServerSession(authOptions);
@@ -11,7 +13,7 @@ export default async function ProfilePage() {
         <h1 className="text-2xl font-semibold mb-4">Profil</h1>
         <p className="opacity-80">Vous devez être connecté pour voir votre profil.</p>
         <div className="mt-4">
-          <a href="/login" className="inline-flex h-10 px-4 items-center rounded-md border border-foreground/20 hover:bg-foreground/5">Se connecter</a>
+          <Link href="/login" className="inline-flex h-10 px-4 items-center rounded-md border border-foreground/20 hover:bg-foreground/5">Se connecter</Link>
         </div>
       </main>
     );
@@ -20,14 +22,14 @@ export default async function ProfilePage() {
   let data: Awaited<ReturnType<typeof getMyProfile>> | null = null;
   let error: string | null = null;
   try {
-    data = await getMyProfile((session as any).backendAccessToken);
-  } catch (e: any) {
-    error = e?.message || "Erreur";
+    data = await getMyProfile((session as BackendFields).backendAccessToken!);
+  } catch (e: unknown) {
+    error = (e as { message?: string })?.message || "Erreur";
   }
 
-  const userName = (session as any)?.user?.name as string | undefined;
-  const userEmail = (session as any)?.user?.email as string | undefined;
-  const userImage = (session as any)?.user?.image as string | undefined;
+  const userName = session?.user?.name as string | undefined;
+  const userEmail = session?.user?.email as string | undefined;
+  const userImage = session?.user?.image as string | undefined;
 
   return (
     <main className="mx-auto max-w-4xl p-6 space-y-6">
@@ -37,9 +39,8 @@ export default async function ProfilePage() {
       <section className="rounded-md border border-foreground/15 p-4 flex items-center justify-between gap-4">
         <div className="flex items-center gap-3 min-w-0">
           <div className="h-12 w-12 rounded-full overflow-hidden bg-foreground/10 flex items-center justify-center">
-            {/* eslint-disable-next-line @next/next/no-img-element */}
             {userImage ? (
-              <img src={userImage} alt="avatar" className="h-full w-full object-cover" />
+              <Image src={userImage} alt="avatar" width={48} height={48} className="h-full w-full object-cover" />
             ) : (
               <span className="opacity-70 text-sm">{((userName || userEmail || '?') as string).slice(0,1)}</span>
             )}
@@ -50,10 +51,10 @@ export default async function ProfilePage() {
           </div>
         </div>
         <div className="flex items-center gap-2 shrink-0">
-          <a href="/my/courses" className="btn-outline h-9 text-sm">Mes cours</a>
-          <a href="/certificates" className="btn-outline h-9 text-sm">Mes certificats</a>
-          <a href="/notifications" className="btn-outline h-9 text-sm">Notifications</a>
-          <a href="/messages" className="btn-outline h-9 text-sm">Messages</a>
+          <Link href="/my/courses" className="btn-outline h-9 text-sm">Mes cours</Link>
+          <Link href="/certificates" className="btn-outline h-9 text-sm">Mes certificats</Link>
+          <Link href="/notifications" className="btn-outline h-9 text-sm">Notifications</Link>
+          <Link href="/messages" className="btn-outline h-9 text-sm">Messages</Link>
           <form action="/api/auth/signout" method="post">
             <button className="btn-outline h-9 text-sm">Se déconnecter</button>
           </form>

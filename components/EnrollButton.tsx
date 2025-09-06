@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { useSession, signIn } from 'next-auth/react';
+import { useSession } from 'next-auth/react';
 import { toast } from '../lib/toast';
 
 export default function EnrollButton({ coursId }: { coursId: number }) {
@@ -23,8 +23,8 @@ export default function EnrollButton({ coursId }: { coursId: number }) {
       const data = await res.json();
       if (!res.ok) throw new Error(data?.error || `HTTP ${res.status}`);
       toast('Inscription réussie ✅', 'success');
-    } catch (e: any) {
-      toast(e?.message || "Échec de l'inscription", 'error');
+    } catch (e: unknown) {
+      toast((e as { message?: string })?.message || "Échec de l'inscription", 'error');
     } finally {
       setLoading(false);
     }

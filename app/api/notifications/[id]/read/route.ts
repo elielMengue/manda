@@ -12,11 +12,11 @@ export async function PATCH(_req: Request, { params }: { params: Promise<{ id: s
   try {
     await jsonFetch(`/api/v1/notifications/${notifId}/read`, {
       method: 'PATCH',
-      token: (session as any).backendAccessToken,
+      token: (session as unknown).backendAccessToken,
     });
     return new NextResponse(null, { status: 204 });
-  } catch (e: any) {
-    return NextResponse.json({ error: e?.message || 'Erreur' }, { status: e?.status || 500 });
+  } catch (e: unknown) {
+    return NextResponse.json({ error: (e as { message?: string })?.message || 'Erreur' }, { status: e?.status || 500 });
   }
 }
 

@@ -10,9 +10,9 @@ export async function PATCH(req: Request, { params }: { params: Promise<{ id: st
   const optionId = Number(id);
   const body = await req.json();
   try {
-    const data = await jsonFetch(`/api/v1/options/${optionId}`, { method: 'PATCH', token: (session as any).backendAccessToken, body });
+    const data = await jsonFetch(`/api/v1/options/${optionId}`, { method: 'PATCH', token: (session as unknown).backendAccessToken, body });
     return NextResponse.json(data);
-  } catch (e: any) { return NextResponse.json({ error: e?.message || 'Erreur' }, { status: e?.status || 500 }); }
+  } catch (e: unknown) { return NextResponse.json({ error: (e as { message?: string })?.message || 'Erreur' }, { status: e?.status || 500 }); }
 }
 
 export async function DELETE(_req: Request, { params }: { params: Promise<{ id: string }> }) {
@@ -21,8 +21,8 @@ export async function DELETE(_req: Request, { params }: { params: Promise<{ id: 
   const { id } = await params;
   const optionId = Number(id);
   try {
-    const data = await jsonFetch(`/api/v1/options/${optionId}`, { method: 'DELETE', token: (session as any).backendAccessToken });
+    const data = await jsonFetch(`/api/v1/options/${optionId}`, { method: 'DELETE', token: (session as unknown).backendAccessToken });
     return NextResponse.json(data);
-  } catch (e: any) { return NextResponse.json({ error: e?.message || 'Erreur' }, { status: e?.status || 500 }); }
+  } catch (e: unknown) { return NextResponse.json({ error: (e as { message?: string })?.message || 'Erreur' }, { status: e?.status || 500 }); }
 }
 

@@ -2,8 +2,8 @@ import { z } from "zod";
 
 export class ApiError extends Error {
   status: number;
-  info?: any;
-  constructor(message: string, status: number, info?: any) {
+  info?: unknown;
+  constructor(message: string, status: number, info?: unknown) {
     super(message);
     this.status = status;
     this.info = info;
@@ -16,15 +16,15 @@ export function getApiBase() {
 
 type FetchOptions = Omit<RequestInit, "body"> & {
   token?: string | null;
-  body?: any;
+  body?: unknown;
 };
 
 export async function jsonFetch<T>(path: string, opts: FetchOptions = {}): Promise<T> {
   const base = getApiBase();
   const url = path.startsWith("http") ? path : `${base}${path}`;
 
-  const headers: HeadersInit = {
-    ...(opts.headers || {}),
+  const headers: Record<string, string> = {
+    ...(opts.headers as Record<string, string> | undefined || {}),
   };
 
   if (opts.body !== undefined && !(opts.body instanceof FormData)) {

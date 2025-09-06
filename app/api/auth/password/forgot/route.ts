@@ -6,8 +6,8 @@ export async function POST(req: Request) {
   try {
     const data = await jsonFetch(`/api/v1/auth/password/forgot`, { method: 'POST', body: { email } });
     return NextResponse.json(data);
-  } catch (e: any) {
-    return NextResponse.json({ error: e?.message || 'Erreur' }, { status: e?.status || 500 });
+  } catch (e: unknown) {
+    return NextResponse.json({ error: (e as { message?: string })?.message || 'Erreur' }, { status: e?.status || 500 });
   }
 }
 

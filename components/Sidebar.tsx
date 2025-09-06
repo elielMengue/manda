@@ -1,5 +1,5 @@
 import { getServerSession } from "next-auth";
-import { authOptions } from "../lib/auth";
+import { authOptions, type BackendFields } from "../lib/auth";
 import { type NavItem } from "./SidebarNav";
 import { listMyNotifications } from "../lib/api/notifications";
 import { listConversations } from "../lib/api/messages";
@@ -9,8 +9,8 @@ import UserMenu from "./UserMenu";
 
 export default async function Sidebar() {
   const session = await getServerSession(authOptions);
-  const role = (session as any)?.backendRole as string | undefined;
-  const token = (session as any)?.backendAccessToken as string | undefined;
+  const role = (session as BackendFields)?.backendRole as string | undefined;
+  const token = (session as BackendFields)?.backendAccessToken as string | undefined;
 
   let unread = 0;
   let convCount = 0;
@@ -56,9 +56,9 @@ export default async function Sidebar() {
     { href: "/admin/users", label: "Utilisateurs", icon: 'user' },
   ]});
 
-  const userName = (session as any)?.user?.name as string | undefined;
-  const userEmail = (session as any)?.user?.email as string | undefined;
-  const userImage = (session as any)?.user?.image as string | undefined;
+  const userName = session?.user?.name as string | undefined;
+  const userEmail = session?.user?.email as string | undefined;
+  const userImage = session?.user?.image as string | undefined;
 
   return (
     <>

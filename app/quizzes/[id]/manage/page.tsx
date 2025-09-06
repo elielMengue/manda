@@ -1,17 +1,19 @@
 import { getServerSession } from "next-auth";
-import { authOptions } from "../../../../lib/auth";
+import { authOptions, type BackendFields } from "../../../../lib/auth";
 import { redirect } from "next/navigation";
 import { getQuizFull } from "../../../../lib/api/quizzes";
+import { useState } from 'react';
+import { toast } from "../../../../lib/toast";
 
 export default async function ManageQuizPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
   const quizId = Number(id);
   const session = await getServerSession(authOptions);
   if (!session) redirect('/login');
-  const role = (session as any).backendRole as string | undefined;
+  const role = (session as BackendFields).backendRole as string | undefined;
   if (role !== 'Mentor' && role !== 'Admin') redirect(`/quizzes/${quizId}`);
 
-  const token = (session as any).backendAccessToken as string;
+  const token = (session as BackendFields).backendAccessToken as string;
   const quiz = await getQuizFull(quizId, token).catch(() => null);
 
   return (
@@ -24,7 +26,7 @@ export default async function ManageQuizPage({ params }: { params: Promise<{ id:
 
       <section className="space-y-3">
         <div className="text-sm opacity-70">Questions</div>
-        {(quiz?.questions || []).map((q: any) => (
+        {(quiz?.questions || []).map((q: Question) => (
           <div key={q.id} className="rounded-md border border-foreground/10 p-4 space-y-3">
             <div className="flex items-start justify-between gap-3">
               <div className="font-medium">{q.ordre + 1}. {q.questionText} ({q.typeQuestion})</div>
@@ -34,7 +36,7 @@ export default async function ManageQuizPage({ params }: { params: Promise<{ id:
             </div>
             {String(q.typeQuestion).toLowerCase().includes('qcm') ? (
               <div className="space-y-2">
-                {(q.options || []).map((o: any) => (
+                {(q.options || []).map((o: Option) => (
                   <div key={o.id} className="flex items-center justify-between gap-2 text-sm">
                     <div>{o.optionText} {o.isCorrect ? '• Correcte' : ''}</div>
                     <form action={`/api/options/${o.id}`} method="post" className="contents">
@@ -45,7 +47,7 @@ export default async function ManageQuizPage({ params }: { params: Promise<{ id:
               </div>
             ) : (
               <div className="space-y-2">
-                {(q.reponses || []).map((r: any) => (
+                {(q.reponses || []).map((r: Answer) => (
                   <div key={r.id} className="flex items-center justify-between gap-2 text-sm">
                     <div>{r.reponseText}</div>
                     <form action={`/api/reponses/${r.id}`} method="post" className="contents">
@@ -63,14 +65,10 @@ export default async function ManageQuizPage({ params }: { params: Promise<{ id:
   );
 }
 
-'use client';
-import { useState } from 'react';
-import { toast } from "../../../../lib/toast";
-
 function AddQuestionForm({ quizId }: { quizId: number }) {
   const [form, setForm] = useState({ questionText: '', ordre: 0, points: 1, typeQuestion: 'QCM' });
   const [loading, setLoading] = useState(false);
-  const set = (k: string, v: any) => setForm((f) => ({ ...f, [k]: v }));
+  const set = (k: string, v: unknown) => setForm((f) => ({ ...f, [k]: v }));
   const submit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
@@ -79,8 +77,8 @@ function AddQuestionForm({ quizId }: { quizId: number }) {
       const data = await res.json();
       if (!res.ok) throw new Error(data?.error || `HTTP ${res.status}`);
       toast('Question ajoutée ✅', 'success');
-    } catch (e: any) {
-      toast(e?.message || 'Erreur', 'error');
+    } catch (e: unknown) {
+      toast((e as { message?: string })?.message || 'Erreur', 'error');
     } finally { setLoading(false); }
   };
   return (
@@ -94,8 +92,12 @@ function AddQuestionForm({ quizId }: { quizId: number }) {
   );
 }
 
-function AddOptionOrAnswer({ question }: { question: any }) {
-  const isQcm = String(question.typeQuestion).toLowerCase().includes('qcm');
+interface Option { id: number; optionText: string; isCorrect?: boolean; }
+interface Answer { id: number; reponseText: string; }
+interface Question { id: number; ordre: number; questionText: string; typeQuestion: string; options?: Option[]; reponses?: Answer[]; }
+
+function AddOptionOrAnswer({ question }: { question: Question }) {
+  const isQcm = question.typeQuestion.toLowerCase().includes('qcm');
   return isQcm ? <AddOptionForm questionId={question.id} /> : <AddAnswerForm questionId={question.id} />;
 }
 
@@ -109,7 +111,7 @@ function AddOptionForm({ questionId }: { questionId: number }) {
       const data = await res.json(); if (!res.ok) throw new Error(data?.error || `HTTP ${res.status}`);
       toast('Option ajoutée ✅', 'success');
       setForm({ optionText: '', isCorrect: false });
-    } catch (e: any) { toast(e?.message || 'Erreur', 'error'); } finally { setLoading(false); }
+    } catch (e: unknown) { toast((e as { message?: string })?.message || 'Erreur', 'error'); } finally { setLoading(false); }
   };
   return (
     <form onSubmit={submit} className="flex flex-wrap items-end gap-2">
@@ -130,7 +132,7 @@ function AddAnswerForm({ questionId }: { questionId: number }) {
       const data = await res.json(); if (!res.ok) throw new Error(data?.error || `HTTP ${res.status}`);
       toast('Réponse ajoutée ✅', 'success');
       setReponseText('');
-    } catch (e: any) { toast(e?.message || 'Erreur', 'error'); } finally { setLoading(false); }
+    } catch (e: unknown) { toast((e as { message?: string })?.message || 'Erreur', 'error'); } finally { setLoading(false); }
   };
   return (
     <form onSubmit={submit} className="flex items-end gap-2">

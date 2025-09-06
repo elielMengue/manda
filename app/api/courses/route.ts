@@ -8,10 +8,10 @@ export async function POST(req: Request) {
   if (!session) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   const body = await req.json();
   try {
-    const data = await jsonFetch(`/api/v1/cours`, { method: 'POST', token: (session as any).backendAccessToken, body });
+    const data = await jsonFetch(`/api/v1/cours`, { method: 'POST', token: (session as unknown).backendAccessToken, body });
     return NextResponse.json(data, { status: 201 });
-  } catch (e: any) {
-    return NextResponse.json({ error: e?.message || 'Erreur' }, { status: e?.status || 500 });
+  } catch (e: unknown) {
+    return NextResponse.json({ error: (e as { message?: string })?.message || 'Erreur' }, { status: e?.status || 500 });
   }
 }
 

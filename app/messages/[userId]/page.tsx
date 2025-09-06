@@ -1,7 +1,8 @@
 import { getServerSession } from "next-auth";
-import { authOptions } from "../../../lib/auth";
+import { authOptions, type BackendFields } from "../../../lib/auth";
 import { getConversation } from "../../../lib/api/messages";
 import MessageComposer from "../../../components/MessageComposer";
+import Link from "next/link";
 
 export default async function ConversationPage({ params }: { params: Promise<{ userId: string }> }) {
   const { userId } = await params;
@@ -13,20 +14,20 @@ export default async function ConversationPage({ params }: { params: Promise<{ u
         <h1 className="text-2xl font-semibold mb-4">Conversation</h1>
         <p className="opacity-80">Vous devez être connecté.</p>
         <div className="mt-4">
-          <a href="/api/auth/signin" className="inline-flex h-10 px-4 items-center rounded-md border border-foreground/20 hover:bg-foreground/5">Se connecter</a>
+          <Link href="/api/auth/signin" className="inline-flex h-10 px-4 items-center rounded-md border border-foreground/20 hover:bg-foreground/5">Se connecter</Link>
         </div>
       </main>
     );
   }
-  const token = (session as any).backendAccessToken as string;
+  const token = (session as BackendFields).backendAccessToken as string;
   let items = [] as Awaited<ReturnType<typeof getConversation>>;
   let error: string | null = null;
   try {
     items = await getConversation(token, otherId);
-  } catch (e: any) {
-    error = e?.message || "Erreur";
+  } catch (e: unknown) {
+    error = (e as { message?: string })?.message || "Erreur";
   }
-  const myId = (session as any).backendUserId as number | undefined;
+  const myId = (session as BackendFields).backendUserId as number | undefined;
   return (
     <main className="mx-auto max-w-3xl p-6 space-y-4">
       <h1 className="text-2xl font-semibold">Conversation avec #{otherId}</h1>

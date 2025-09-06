@@ -6,7 +6,7 @@ import { toast } from '../lib/toast';
 export default function AddQuizForm({ moduleId }: { moduleId: number }) {
   const [form, setForm] = useState({ titre: '', description: '', dureeMax: 15, nombreTentatives: 1, scoreMinReussite: 0, type: 'QCM' });
   const [loading, setLoading] = useState(false);
-  const set = (k: string, v: any) => setForm((f) => ({ ...f, [k]: v }));
+  const set = (k: string, v: unknown) => setForm((f) => ({ ...f, [k]: v }));
 
   const submit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -16,8 +16,8 @@ export default function AddQuizForm({ moduleId }: { moduleId: number }) {
       const data = await res.json();
       if (!res.ok) throw new Error(data?.error || `HTTP ${res.status}`);
       toast('Quiz créé ✅', 'success');
-    } catch (e: any) {
-      toast(e?.message || 'Erreur', 'error');
+    } catch (e: unknown) {
+      toast((e as { message?: string })?.message || 'Erreur', 'error');
     } finally {
       setLoading(false);
     }

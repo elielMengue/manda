@@ -17,7 +17,7 @@ export default function AdminInviteForm() {
   const [loading, setLoading] = useState(false);
   const [issued, setIssued] = useState<{ email: string; password: string } | null>(null);
 
-  const set = (k: string, v: any) => setForm((f) => ({ ...f, [k]: v }));
+  const set = (k: string, v: unknown) => setForm((f) => ({ ...f, [k]: v }));
 
   const submit = async (e: React.FormEvent) => {
     e.preventDefault(); setLoading(true); setIssued(null);
@@ -27,7 +27,7 @@ export default function AdminInviteForm() {
       if (!res.ok) throw new Error(data?.error || `HTTP ${res.status}`);
       toast('Compte créé et rôle attribué ✅', 'success');
       setIssued({ email: form.email, password: pwd });
-    } catch (e: any) { toast(e?.message || 'Erreur', 'error'); }
+    } catch (e: unknown) { toast((e as { message?: string })?.message || 'Erreur', 'error'); }
     finally { setLoading(false); }
   };
 

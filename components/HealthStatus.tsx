@@ -1,5 +1,5 @@
 export default async function HealthStatus({ apiBase }: { apiBase: string }) {
-  let health: any = null;
+  let health: { timestamp: string } | null = null;
   try {
     const res = await fetch(`${apiBase}/health`, { cache: 'no-store' });
     if (res.ok) health = await res.json();

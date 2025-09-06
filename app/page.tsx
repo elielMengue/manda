@@ -30,7 +30,6 @@ export default async function Home() {
           </div>
           <Suspense fallback={<div className="skeleton h-24 rounded-xl" />}>
             {/* Statut back avec skeleton lors du streaming */}
-            {/* @ts-expect-error Async Server Component */}
             <HealthStatus apiBase={apiBase} />
           </Suspense>
         </div>

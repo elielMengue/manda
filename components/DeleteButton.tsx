@@ -16,7 +16,7 @@ export default function DeleteButton({ url, label = 'Supprimer', confirmText }: 
       if (!res.ok) throw new Error(data?.error || `HTTP ${res.status}`);
       toast('Supprimé ✅', 'success');
       router.refresh();
-    } catch (e: any) { toast(e?.message || 'Erreur', 'error'); }
+    } catch (e: unknown) { toast((e as { message?: string })?.message || 'Erreur', 'error'); }
     finally { setLoading(false); }
   };
   return (

@@ -1,3 +1,9 @@
+"use client";
+
+import { useState } from 'react';
+import { toast } from '../../lib/toast';
+import { useRouter } from 'next/navigation';
+
 export default function ResetPasswordPage() {
   return (
     <main className="mx-auto max-w-md p-6 space-y-4">
@@ -7,11 +13,6 @@ export default function ResetPasswordPage() {
     </main>
   );
 }
-
-'use client';
-import { useState } from 'react';
-import { toast } from '../../lib/toast';
-import { useRouter } from 'next/navigation';
 
 function ResetForm() {
   const [token, setToken] = useState('');
@@ -25,7 +26,7 @@ function ResetForm() {
       const data = await res.json(); if (!res.ok) throw new Error(data?.error || `HTTP ${res.status}`);
       toast('Mot de passe réinitialisé ✅', 'success');
       router.push('/login');
-    } catch (e: any) { toast(e?.message || 'Erreur', 'error'); } finally { setLoading(false); }
+    } catch (e: unknown) { toast((e as { message?: string })?.message || 'Erreur', 'error'); } finally { setLoading(false); }
   };
   return (
     <form onSubmit={submit} className="space-y-3">

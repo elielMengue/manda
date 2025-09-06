@@ -40,22 +40,22 @@ export async function submitQuiz(id: number, token: string, answers: Array<{ que
   });
 }
 
-export async function createQuiz(moduleId: number, token: string, body: any) {
-  return safeJsonFetch<any>(`/api/v1/modules/${moduleId}/quizzes`, { method: 'POST', token, body, schema: z.any() });
+export async function createQuiz(moduleId: number, token: string, body: unknown) {
+  return safeJsonFetch<unknown>(`/api/v1/modules/${moduleId}/quizzes`, { method: 'POST', token, body, schema: z.unknown() });
 }
 
-export async function createQuestion(quizId: number, token: string, body: any) {
-  return safeJsonFetch<any>(`/api/v1/quizzes/${quizId}/questions`, { method: 'POST', token, body, schema: z.any() });
+export async function createQuestion(quizId: number, token: string, body: unknown) {
+  return safeJsonFetch<unknown>(`/api/v1/quizzes/${quizId}/questions`, { method: 'POST', token, body, schema: z.unknown() });
 }
 
-export async function createOption(questionId: number, token: string, body: any) {
-  return safeJsonFetch<any>(`/api/v1/questions/${questionId}/options`, { method: 'POST', token, body, schema: z.any() });
+export async function createOption(questionId: number, token: string, body: unknown) {
+  return safeJsonFetch<unknown>(`/api/v1/questions/${questionId}/options`, { method: 'POST', token, body, schema: z.unknown() });
 }
 
-export async function createReponse(questionId: number, token: string, body: any) {
-  return safeJsonFetch<any>(`/api/v1/questions/${questionId}/reponses`, { method: 'POST', token, body, schema: z.any() });
+export async function createReponse(questionId: number, token: string, body: unknown) {
+  return safeJsonFetch<unknown>(`/api/v1/questions/${questionId}/reponses`, { method: 'POST', token, body, schema: z.unknown() });
 }
 
 export async function getQuizFull(id: number, token: string) {
-  return safeJsonFetch<any>(`/api/v1/quizzes/${id}/full`, { token, schema: z.any() });
+  return safeJsonFetch<Quiz>(`/api/v1/quizzes/${id}/full`, { token, schema: quizSchema });
 }

@@ -24,8 +24,8 @@ export default function CertificateIssueForm() {
       if (!res.ok) throw new Error(data?.error || `HTTP ${res.status}`);
       setMessage('Certificat émis ✅');
       setCertId(data.id);
-    } catch (e: any) {
-      setMessage(e?.message || 'Erreur');
+    } catch (e: unknown) {
+      setMessage((e as { message?: string })?.message || 'Erreur');
     } finally {
       setLoading(false);
     }

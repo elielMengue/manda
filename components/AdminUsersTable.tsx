@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { toast } from '../lib/toast';
 
-type User = { id: number; firstName: string; lastName: string; email: string; role: 'Admin'|'Apprenant'|'Mentor'|'Partenaire'; status?: boolean; createdAt?: string };
+export type User = { id: number; firstName: string; lastName: string; email: string; role: 'Admin'|'Apprenant'|'Mentor'|'Partenaire'; status?: boolean; createdAt?: string };
 
 export default function AdminUsersTable({ initial }: { initial: User[] }) {
   const [users, setUsers] = useState<User[]>(initial);
@@ -25,9 +25,9 @@ export default function AdminUsersTable({ initial }: { initial: User[] }) {
     try {
       await patchUser(id, { role });
       toast('Rôle mis à jour ✅', 'success');
-    } catch (e: any) {
-      updateLocal(id, { role: prev as any });
-      toast(e?.message || 'Erreur', 'error');
+    } catch (e: unknown) {
+      updateLocal(id, { role: prev });
+      toast((e as { message?: string })?.message || 'Erreur', 'error');
     }
   };
 
@@ -37,9 +37,9 @@ export default function AdminUsersTable({ initial }: { initial: User[] }) {
     try {
       await patchUser(id, { status: !current });
       toast('Statut mis à jour ✅', 'success');
-    } catch (e: any) {
+    } catch (e: unknown) {
       updateLocal(id, { status: current });
-      toast(e?.message || 'Erreur', 'error');
+      toast((e as { message?: string })?.message || 'Erreur', 'error');
     }
   };
 

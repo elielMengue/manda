@@ -1,6 +1,5 @@
 'use client';
 
-import Image from 'next/image';
 import { signOut } from 'next-auth/react';
 
 export default function UserMenu({ name, email, image }: { name?: string | null; email?: string | null; image?: string | null }) {
