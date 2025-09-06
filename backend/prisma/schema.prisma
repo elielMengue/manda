@@ -17,7 +17,7 @@ model User {
   status    Boolean
   photoUrl  String   @db.VarChar(255)
   password  String   @db.VarChar(255)
-  role      Role     @default(Admin)
+  role      Role     @default(Apprenant)
   createdAt DateTime @default(now()) @db.Timestamp(6)
   updatedAt DateTime @updatedAt @db.Timestamp(6)
 
