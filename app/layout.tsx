@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import Providers from "../components/Providers";
 import Sidebar from "../components/Sidebar";
@@ -8,16 +7,7 @@ import PublicFooter from "../components/PublicFooter";
 import { getServerSession } from "next-auth";
 import { authOptions } from "../lib/auth";
 import ToastProvider from "../components/ToastProvider";
-
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-});
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
-});
+import type { ReactNode } from "react";
 
 export const metadata: Metadata = {
   title: "EduImpact",
@@ -26,13 +16,13 @@ export const metadata: Metadata = {
 
 export default async function RootLayout({
   children,
-}: Readonly<{
-  children: React.ReactNode;
-}>) {
+}: Readonly<{ 
+  children: ReactNode; 
+}>) { 
   const session = await getServerSession(authOptions);
   return (
     <html lang="en">
-      <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
+      <body className="antialiased">
         <Providers>
           {session ? (
             <div className="flex min-h-screen">
