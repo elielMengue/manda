@@ -6,7 +6,7 @@ import { toast } from '../lib/toast';
 export default function MentorCourseForm() {
   const [form, setForm] = useState({ titre: '', description: '', duree: 60, status: 'draft', imageUrl: '' });
   const [loading, setLoading] = useState(false);
-  const onChange = (k: string, v: any) => setForm((f) => ({ ...f, [k]: v }));
+  const onChange = (k: string, v: unknown) => setForm((f) => ({ ...f, [k]: v }));
 
   const submit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -16,8 +16,8 @@ export default function MentorCourseForm() {
       const data = await res.json();
       if (!res.ok) throw new Error(data?.error || `HTTP ${res.status}`);
       toast('Cours créé ✅', 'success');
-    } catch (e: any) {
-      toast(e?.message || 'Erreur', 'error');
+    } catch (e: unknown) {
+      toast((e as { message?: string })?.message || 'Erreur', 'error');
     } finally {
       setLoading(false);
     }

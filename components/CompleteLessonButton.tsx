@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { useSession, signIn } from 'next-auth/react';
+import { useSession } from 'next-auth/react';
 import { toast } from '../lib/toast';
 
 export default function CompleteLessonButton({ lessonId }: { lessonId: number }) {
@@ -21,8 +21,8 @@ export default function CompleteLessonButton({ lessonId }: { lessonId: number })
       if (!res.ok) throw new Error(data?.error || `HTTP ${res.status}`);
       setProgression(typeof data?.progression === 'number' ? data.progression : null);
       toast('Leçon marquée comme complétée ✅', 'success');
-    } catch (e: any) {
-      toast(e?.message || 'Erreur lors de la complétion', 'error');
+    } catch (e: unknown) {
+      toast((e as { message?: string })?.message || 'Erreur lors de la complétion', 'error');
     } finally {
       setLoading(false);
     }

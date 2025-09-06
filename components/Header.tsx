@@ -1,6 +1,7 @@
-'use client';
+"use client";
 
-import { useSession, signIn, signOut } from 'next-auth/react';
+import { useSession, signOut } from 'next-auth/react';
+import Link from 'next/link';
 
 export default function Header() {
   const { data: session, status } = useSession();
@@ -8,17 +9,17 @@ export default function Header() {
   return (
     <header className="w-full border-b border-foreground/10 bg-background/60 backdrop-blur">
       <div className="mx-auto max-w-5xl px-4 h-14 flex items-center justify-between">
-        <a href="/" className="font-semibold">EduImpact</a>
+        <Link href="/" className="font-semibold">EduImpact</Link>
 
         <nav className="flex items-center gap-3 text-sm">
-          <a href="/" className="opacity-80 hover:opacity-100">Accueil</a>
-          <a href="/courses" className="opacity-80 hover:opacity-100">Cours</a>
-          <a href="/my/courses" className="opacity-80 hover:opacity-100">Mes cours</a>
-          <a href="/profile" className="opacity-80 hover:opacity-100">Profil</a>
-          <a href="/notifications" className="opacity-80 hover:opacity-100">Notifications</a>
-          <a href="/messages" className="opacity-80 hover:opacity-100">Messages</a>
-          <a href="/certificates/issue" className="opacity-80 hover:opacity-100">Certificats</a>
-          <a href="/dashboard" className="opacity-80 hover:opacity-100">Dashboard</a>
+          <Link href="/" className="opacity-80 hover:opacity-100">Accueil</Link>
+          <Link href="/courses" className="opacity-80 hover:opacity-100">Cours</Link>
+          <Link href="/my/courses" className="opacity-80 hover:opacity-100">Mes cours</Link>
+          <Link href="/profile" className="opacity-80 hover:opacity-100">Profil</Link>
+          <Link href="/notifications" className="opacity-80 hover:opacity-100">Notifications</Link>
+          <Link href="/messages" className="opacity-80 hover:opacity-100">Messages</Link>
+          <Link href="/certificates/issue" className="opacity-80 hover:opacity-100">Certificats</Link>
+          <Link href="/dashboard" className="opacity-80 hover:opacity-100">Dashboard</Link>
 
           {status === 'authenticated' ? (
             <>
@@ -33,7 +34,7 @@ export default function Header() {
               </button>
             </>
           ) : (
-            <a href="/login" className="inline-flex h-8 px-3 items-center rounded-md border border-foreground/20 hover:bg-foreground/5">Se connecter</a>
+            <Link href="/login" className="inline-flex h-8 px-3 items-center rounded-md border border-foreground/20 hover:bg-foreground/5">Se connecter</Link>
           )}
         </nav>
       </div>

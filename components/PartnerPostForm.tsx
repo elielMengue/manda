@@ -28,9 +28,9 @@ export default function PartnerPostForm() {
       toast('Publication créée ✅', 'success');
       setMessage('Publication créée ✅');
       setTitle(''); setContent(''); setDateExpiration(''); setImageUrl(''); setTypeOportunite('Offre'); setStatus('active');
-    } catch (e: any) {
-      toast(e?.message || 'Erreur', 'error');
-      setMessage(e?.message || 'Erreur');
+    } catch (e: unknown) {
+      toast((e as { message?: string })?.message || 'Erreur', 'error');
+      setMessage((e as { message?: string })?.message || 'Erreur');
     } finally {
       setLoading(false);
     }

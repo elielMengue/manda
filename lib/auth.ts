@@ -2,6 +2,18 @@ import type { NextAuthOptions } from "next-auth";
 import GoogleProvider from "next-auth/providers/google";
 import CredentialsProvider from "next-auth/providers/credentials";
 
+export interface BackendFields {
+  backendAccessToken?: string;
+  backendRole?: string;
+  backendUserId?: number;
+}
+
+interface BackendUser extends BackendFields {
+  id: string;
+  email?: string;
+  name?: string;
+}
+
 const apiBase = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8080";
 
 export const authOptions: NextAuthOptions = {
@@ -12,7 +24,7 @@ export const authOptions: NextAuthOptions = {
         email: { label: 'Email', type: 'email' },
         password: { label: 'Password', type: 'password' },
       },
-      async authorize(credentials) {
+      async authorize(credentials): Promise<BackendUser | null> {
         if (!credentials?.email || !credentials?.password) return null;
         const res = await fetch(`${apiBase}/api/v1/auth/login`, {
           method: 'POST',
@@ -28,7 +40,7 @@ export const authOptions: NextAuthOptions = {
           backendAccessToken: data.accessToken,
           backendRole: data.user?.role,
           backendUserId: data.user?.id,
-        } as any;
+        } as BackendUser;
       },
     }),
     GoogleProvider({
@@ -40,10 +52,9 @@ export const authOptions: NextAuthOptions = {
   callbacks: {
     async jwt({ token, account, profile, user }) {
       if (account?.provider === 'google' && profile) {
-        const email = (profile as any).email as string;
-        const name = (profile as any).name as string | undefined;
+        const { email, name, picture } = profile as { email?: string; name?: string; picture?: string };
         const [firstName = "", lastName = ""] = (name || "").split(" ");
-        const photoUrl = (profile as any).picture as string | undefined;
+        const photoUrl = picture;
         const res = await fetch(`${apiBase}/api/v1/auth/oauth`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -58,24 +69,24 @@ export const authOptions: NextAuthOptions = {
         });
         if (res.ok) {
           const data = await res.json();
-          (token as any).backendAccessToken = data.accessToken;
-          (token as any).backendRole = data.user?.role;
-          (token as any).backendUserId = data.user?.id;
+          (token as BackendFields).backendAccessToken = data.accessToken;
+          (token as BackendFields).backendRole = data.user?.role;
+          (token as BackendFields).backendUserId = data.user?.id;
         } else {
           throw new Error("OAuth backend failed");
         }
       } else if (account?.provider === 'credentials' && user) {
-        (token as any).backendAccessToken = (user as any).backendAccessToken;
-        (token as any).backendRole = (user as any).backendRole;
-        (token as any).backendUserId = (user as any).backendUserId;
+        (token as BackendFields).backendAccessToken = (user as BackendFields).backendAccessToken;
+        (token as BackendFields).backendRole = (user as BackendFields).backendRole;
+        (token as BackendFields).backendUserId = (user as BackendFields).backendUserId;
       }
       return token;
     },
     async session({ session, token }) {
       if (session.user) {
-        (session as any).backendAccessToken = (token as any).backendAccessToken;
-        (session as any).backendRole = (token as any).backendRole;
-        (session as any).backendUserId = (token as any).backendUserId;
+        (session as BackendFields).backendAccessToken = (token as BackendFields).backendAccessToken;
+        (session as BackendFields).backendRole = (token as BackendFields).backendRole;
+        (session as BackendFields).backendUserId = (token as BackendFields).backendUserId;
       }
       return session;
     },

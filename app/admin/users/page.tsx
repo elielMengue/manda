@@ -1,23 +1,23 @@
 import { getServerSession } from "next-auth";
-import { authOptions } from "../../../lib/auth";
+import { authOptions, type BackendFields } from "../../../lib/auth";
 import { redirect } from "next/navigation";
-import AdminUsersTable from "../../../components/AdminUsersTable";
+import AdminUsersTable, { type User } from "../../../components/AdminUsersTable";
 
 export default async function AdminUsersPage() {
   const session = await getServerSession(authOptions);
   if (!session) redirect('/login');
-  const role = (session as any).backendRole as string | undefined;
+  const role = (session as BackendFields).backendRole as string | undefined;
   if (role !== 'Admin') redirect('/');
 
-  let users: any[] = [];
+  let users: User[] = [];
   let error: string | null = null;
   try {
     const res = await fetch('/api/admin/users', { cache: 'no-store' });
     const data = await res.json();
     if (!res.ok) throw new Error(data?.error || `HTTP ${res.status}`);
-    users = Array.isArray(data?.items) ? data.items : Array.isArray(data) ? data : [];
-  } catch (e: any) {
-    error = e?.message || 'Erreur';
+    users = Array.isArray(data?.items) ? (data.items as User[]) : Array.isArray(data) ? (data as User[]) : [];
+  } catch (e: unknown) {
+    error = (e as { message?: string })?.message || 'Erreur';
   }
 
   return (

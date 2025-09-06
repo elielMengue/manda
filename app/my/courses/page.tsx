@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { getServerSession } from "next-auth";
-import { authOptions } from "../../../lib/auth";
+import { authOptions, type BackendFields } from "../../../lib/auth";
 import { listMyInscriptions } from "../../../lib/api/inscriptions";
 
 export default async function MyCoursesPage() {
@@ -11,7 +11,7 @@ export default async function MyCoursesPage() {
         <h1 className="text-2xl font-semibold mb-4">Mes cours</h1>
         <p className="opacity-80">Vous devez être connecté pour voir vos cours.</p>
         <div className="mt-4">
-          <a href="/login" className="inline-flex h-10 px-4 items-center rounded-md border border-foreground/20 hover:bg-foreground/5">Se connecter</a>
+          <Link href="/login" className="inline-flex h-10 px-4 items-center rounded-md border border-foreground/20 hover:bg-foreground/5">Se connecter</Link>
         </div>
       </main>
     );
@@ -20,9 +20,9 @@ export default async function MyCoursesPage() {
   let items: Awaited<ReturnType<typeof listMyInscriptions>> = [];
   let error: string | null = null;
   try {
-    items = await listMyInscriptions((session as any).backendAccessToken);
-  } catch (e: any) {
-    error = e?.message || "Erreur";
+    items = await listMyInscriptions((session as BackendFields).backendAccessToken!);
+  } catch (e: unknown) {
+    error = (e as { message?: string })?.message || "Erreur";
   }
 
   return (

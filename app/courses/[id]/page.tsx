@@ -2,7 +2,7 @@ import Link from "next/link";
 import { getCours } from "../../../lib/api/courses";
 import EnrollButton from "../../../components/EnrollButton";
 import { getServerSession } from "next-auth";
-import { authOptions } from "../../../lib/auth";
+import { authOptions, type BackendFields } from "../../../lib/auth";
 import AddModuleForm from "../../../components/AddModuleForm";
 import DeleteButton from "../../../components/DeleteButton";
 
@@ -13,7 +13,7 @@ export default async function CoursDetailPage({ params }: { params: Promise<{ id
     getServerSession(authOptions),
     getCours(coursId),
   ]);
-  const role = (session as any)?.backendRole as string | undefined;
+  const role = (session as BackendFields)?.backendRole as string | undefined;
 
   return (
     <main className="mx-auto max-w-5xl p-6 space-y-6">

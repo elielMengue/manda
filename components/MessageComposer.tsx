@@ -21,8 +21,8 @@ export default function MessageComposer({ receiverId, onSent }: { receiverId: nu
       if (!res.ok) throw new Error(data?.error || `HTTP ${res.status}`);
       setContent('');
       onSent?.();
-    } catch (e: any) {
-      setError(e?.message || 'Erreur');
+    } catch (e: unknown) {
+      setError((e as { message?: string })?.message || 'Erreur');
     } finally {
       setLoading(false);
     }

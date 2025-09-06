@@ -12,7 +12,7 @@ export default function AdminElevateForm({ email }: { email?: string }) {
       const res = await fetch('/api/admin/elevate', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ password: pwd }) });
       if (!res.ok) { const data = await res.json().catch(()=>null); throw new Error(data?.error || `HTTP ${res.status}`); }
       window.location.href = '/admin';
-    } catch (e: any) { toast(e?.message || 'Erreur', 'error'); } finally { setLoading(false); }
+    } catch (e: unknown) { toast((e as { message?: string })?.message || 'Erreur', 'error'); } finally { setLoading(false); }
   };
   return (
     <form onSubmit={submit} className="space-y-3">

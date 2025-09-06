@@ -1,29 +1,29 @@
 import { redirect } from "next/navigation";
 import { getServerSession } from "next-auth";
-import { authOptions } from "../../lib/auth";
+import { authOptions, type BackendFields } from "../../lib/auth";
 
 export default async function Dashboard() {
   const session = await getServerSession(authOptions);
   if (!session) redirect("/login");
-  const role = (session as any).backendRole as string | undefined;
+  const role = (session as BackendFields).backendRole as string | undefined;
   if (role === 'Apprenant') redirect('/apprenant');
   if (role === 'Mentor') redirect('/mentor');
   if (role === 'Partenaire') redirect('/partenaire');
 
   const apiBase = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8080";
-  let me: any = null;
+  let me: unknown = null;
   let error: string | null = null;
   try {
     const res = await fetch(`${apiBase}/api/v1/me`, {
       cache: "no-store",
       headers: {
-        Authorization: `Bearer ${(session as any).backendAccessToken}`,
+        Authorization: `Bearer ${(session as BackendFields).backendAccessToken}`,
       },
     });
     if (!res.ok) throw new Error(`HTTP ${res.status}`);
     me = await res.json();
-  } catch (e: any) {
-    error = e?.message || "Échec de la requête profil";
+  } catch (e: unknown) {
+    error = (e as { message?: string })?.message || "Échec de la requête profil";
   }
 
   return (
@@ -34,8 +34,8 @@ export default async function Dashboard() {
         <pre className="mt-2 text-xs overflow-auto">
 {JSON.stringify({
   user: session.user,
-  backendUserId: (session as any).backendUserId,
-  backendRole: (session as any).backendRole,
+  backendUserId: (session as BackendFields).backendUserId,
+  backendRole: (session as BackendFields).backendRole,
 }, null, 2)}
         </pre>
       </div>

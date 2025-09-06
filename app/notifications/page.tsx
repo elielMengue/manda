@@ -1,5 +1,6 @@
 import { getServerSession } from "next-auth";
-import { authOptions } from "../../lib/auth";
+import { authOptions, type BackendFields } from "../../lib/auth";
+import Link from "next/link";
 import { listMyNotifications } from "../../lib/api/notifications";
 
 export default async function NotificationsPage() {
@@ -10,19 +11,19 @@ export default async function NotificationsPage() {
         <h1 className="text-2xl font-semibold mb-4">Notifications</h1>
         <p className="opacity-80">Vous devez être connecté.</p>
         <div className="mt-4">
-          <a href="/login" className="inline-flex h-10 px-4 items-center rounded-md border border-foreground/20 hover:bg-foreground/5">Se connecter</a>
+          <Link href="/login" className="inline-flex h-10 px-4 items-center rounded-md border border-foreground/20 hover:bg-foreground/5">Se connecter</Link>
         </div>
       </main>
     );
   }
 
-  const token = (session as any).backendAccessToken as string;
+  const token = (session as BackendFields).backendAccessToken as string;
   let items: Awaited<ReturnType<typeof listMyNotifications>> = [];
   let error: string | null = null;
   try {
     items = await listMyNotifications(token);
-  } catch (e: any) {
-    error = e?.message || "Erreur";
+  } catch (e: unknown) {
+    error = (e as { message?: string })?.message || "Erreur";
   }
 
   return (

@@ -14,7 +14,7 @@ export default function GoogleWithRole() {
       <button onClick={start} className="btn-outline flex items-center gap-2 justify-center">
         <FcGoogle className="text-lg" /> Continuer avec Google
       </button>
-      <p className="text-xs opacity-70">En continuant, vous acceptez nos conditions d'utilisation et notre politique de confidentialité.</p>
+      <p className="text-xs opacity-70">En continuant, vous acceptez nos conditions d&apos;utilisation et notre politique de confidentialité.</p>
     </div>
   );
 }

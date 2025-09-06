@@ -1,5 +1,5 @@
 import { getServerSession } from "next-auth";
-import { authOptions } from "../../lib/auth";
+import { authOptions, type BackendFields } from "../../lib/auth";
 import ProfileCreateForms from "../../components/ProfileCreateForms";
 import { redirect } from "next/navigation";
 import { getMyProfile } from "../../lib/api/profile";
@@ -9,7 +9,7 @@ export default async function OnboardingPage({ searchParams }: { searchParams: P
   if (!session) redirect('/login');
   const sp = await searchParams;
   const role = sp.role as 'Apprenant' | 'Mentor' | 'Partenaire' | undefined;
-  const token = (session as any).backendAccessToken as string;
+  const token = (session as BackendFields).backendAccessToken as string;
   const profile = await getMyProfile(token).catch(() => null);
 
   if (role === 'Apprenant' && profile?.apprenant) redirect('/apprenant');

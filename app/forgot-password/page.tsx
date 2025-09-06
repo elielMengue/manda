@@ -1,3 +1,8 @@
+"use client";
+
+import { useState } from 'react';
+import { toast } from '../../lib/toast';
+
 export default function ForgotPasswordPage() {
   return (
     <main className="mx-auto max-w-md p-6 space-y-4">
@@ -8,10 +13,6 @@ export default function ForgotPasswordPage() {
   );
 }
 
-'use client';
-import { useState } from 'react';
-import { toast } from '../../lib/toast';
-
 function ForgotForm() {
   const [email, setEmail] = useState('');
   const [loading, setLoading] = useState(false);
@@ -21,7 +22,7 @@ function ForgotForm() {
       const res = await fetch('/api/auth/password/forgot', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ email }) });
       const data = await res.json(); if (!res.ok) throw new Error(data?.error || `HTTP ${res.status}`);
       toast('Email envoyé (vérifiez votre boîte) ✅', 'success');
-    } catch (e: any) { toast(e?.message || 'Erreur', 'error'); } finally { setLoading(false); }
+    } catch (e: unknown) { toast((e as { message?: string })?.message || 'Erreur', 'error'); } finally { setLoading(false); }
   };
   return (
     <form onSubmit={submit} className="space-y-3">

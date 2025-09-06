@@ -16,8 +16,8 @@ export default function RegisterForm() {
       const data = await res.json();
       if (!res.ok) throw new Error(data?.error || `HTTP ${res.status}`);
       toast('Compte créé. Continuez avec Google pour vous connecter.', 'success');
-    } catch (e: any) {
-      toast(e?.message || 'Erreur', 'error');
+    } catch (e: unknown) {
+      toast((e as { message?: string })?.message || 'Erreur', 'error');
     } finally {
       setLoading(false);
     }

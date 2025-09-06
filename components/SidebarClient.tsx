@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useState } from 'react';
 import SidebarNav, { type NavItem } from './SidebarNav';
 
 export default function SidebarClient({ initialSections }: { initialSections: Array<{ title: string; items: NavItem[] }> }) {
@@ -15,7 +15,7 @@ export default function SidebarClient({ initialSections }: { initialSections: Ar
   };
 
   useEffect(() => {
-    let timer: any;
+    let timer: ReturnType<typeof setTimeout> | null = null;
     const poll = async () => {
       try {
         const [notifsRes, convsRes] = await Promise.all([
@@ -24,7 +24,7 @@ export default function SidebarClient({ initialSections }: { initialSections: Ar
         ]);
         const notifs = notifsRes.ok ? await notifsRes.json() : [];
         const convs = convsRes.ok ? await convsRes.json() : [];
-        const unread = Array.isArray(notifs) ? notifs.filter((n: any) => !n.isRead).length : 0;
+        const unread = Array.isArray(notifs) ? notifs.filter((n: { isRead?: boolean }) => !n.isRead).length : 0;
         const convCount = Array.isArray(convs) ? convs.length : 0;
         updateBadge('/notifications', unread);
         updateBadge('/messages', convCount);

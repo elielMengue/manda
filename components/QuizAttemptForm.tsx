@@ -45,9 +45,10 @@ export default function QuizAttemptForm({ quiz }: { quiz: Quiz }) {
       if (!res.ok) throw new Error(data?.error || `HTTP ${res.status}`);
       setResult(data);
       toast(`Quiz soumis • Score: ${data.score}`, 'success');
-    } catch (err: any) {
-      setError(err?.message || 'Erreur');
-      toast(err?.message || 'Erreur', 'error');
+    } catch (err: unknown) {
+      const e = err as { message?: string };
+      setError(e.message || 'Erreur');
+      toast(e.message || 'Erreur', 'error');
     } finally {
       setSubmitting(false);
     }

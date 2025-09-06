@@ -2,7 +2,7 @@ import Link from "next/link";
 import { getModule, listLessonsForModule } from "../../../lib/api/modules";
 import { listQuizzesForModule } from "../../../lib/api/quizzes";
 import { getServerSession } from "next-auth";
-import { authOptions } from "../../../lib/auth";
+import { authOptions, type BackendFields } from "../../../lib/auth";
 import AddLessonForm from "../../../components/AddLessonForm";
 import AddQuizForm from "../../../components/AddQuizForm";
 import EditModuleForm from "../../../components/EditModuleForm";
@@ -17,7 +17,7 @@ export default async function ModulePage({ params }: { params: Promise<{ id: str
     listLessonsForModule(moduleId),
     listQuizzesForModule(moduleId),
   ]);
-  const role = (session as any)?.backendRole as string | undefined;
+  const role = (session as BackendFields)?.backendRole as string | undefined;
 
   return (
     <main className="mx-auto max-w-5xl p-6 space-y-6">

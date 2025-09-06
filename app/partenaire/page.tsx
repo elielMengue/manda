@@ -1,8 +1,9 @@
 import { getServerSession } from "next-auth";
-import { authOptions } from "../../lib/auth";
+import { authOptions, type BackendFields } from "../../lib/auth";
 import { getMyProfile } from "../../lib/api/profile";
 import { listPosts } from "../../lib/api/posts";
 import PartnerPostForm from "../../components/PartnerPostForm";
+import Link from "next/link";
 
 export default async function PartnerDashboard() {
   const session = await getServerSession(authOptions);
@@ -14,8 +15,8 @@ export default async function PartnerDashboard() {
       </main>
     );
   }
-  const token = (session as any).backendAccessToken as string;
-  const userId = (session as any).backendUserId as number | undefined;
+  const token = (session as BackendFields).backendAccessToken as string;
+  const userId = (session as BackendFields).backendUserId as number | undefined;
   const profile = await getMyProfile(token).catch(() => null);
   if (!profile?.partenaire) {
     return (
@@ -23,7 +24,7 @@ export default async function PartnerDashboard() {
         <h1 className="text-2xl font-semibold">Espace Partenaire</h1>
         <div className="rounded-md border border-foreground/15 p-4">
           <div className="text-sm opacity-80">Aucun profil Partenaire détecté.</div>
-          <a href="/profile" className="mt-2 inline-flex h-9 px-3 items-center rounded-md border border-foreground/20 hover:bg-foreground/5 text-sm">Créer mon profil</a>
+          <Link href="/profile" className="mt-2 inline-flex h-9 px-3 items-center rounded-md border border-foreground/20 hover:bg-foreground/5 text-sm">Créer mon profil</Link>
         </div>
       </main>
     );
@@ -50,7 +51,7 @@ export default async function PartnerDashboard() {
               <div className="text-sm opacity-80 line-clamp-2">{p.content}</div>
             </div>
           ))}
-          {mine.length === 0 && <div className="text-sm opacity-70">Aucune publication pour l'instant.</div>}
+          {mine.length === 0 && <div className="text-sm opacity-70">Aucune publication pour l&apos;instant.</div>}
         </div>
       </section>
     </main>

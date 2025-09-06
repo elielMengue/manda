@@ -10,12 +10,12 @@ export async function POST(req: Request) {
   try {
     const out = await jsonFetch(`/api/v1/profiles/apprenant`, {
       method: 'POST',
-      token: (session as any).backendAccessToken,
+      token: (session as unknown).backendAccessToken,
       body,
     });
     return NextResponse.json(out);
-  } catch (e: any) {
-    return NextResponse.json({ error: e?.message || 'Erreur' }, { status: e?.status || 500 });
+  } catch (e: unknown) {
+    return NextResponse.json({ error: (e as { message?: string })?.message || 'Erreur' }, { status: e?.status || 500 });
   }
 }
 

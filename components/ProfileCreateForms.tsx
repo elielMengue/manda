@@ -10,7 +10,7 @@ export default function ProfileCreateForms({ onSuccess }: { onSuccess?: (role: '
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState<string | null>(null);
 
-  const submit = async (endpoint: string, body: any) => {
+  const submit = async (endpoint: string, body: unknown) => {
     setLoading(true);
     setMessage(null);
     try {
@@ -27,9 +27,9 @@ export default function ProfileCreateForms({ onSuccess }: { onSuccess?: (role: '
       if (endpoint.includes('mentor')) onSuccess?.('Mentor');
       if (endpoint.includes('partenaire')) onSuccess?.('Partenaire');
       router.refresh();
-    } catch (e: any) {
-      toast(e?.message || 'Erreur', 'error');
-      setMessage(e?.message || 'Erreur');
+    } catch (e: unknown) {
+      toast((e as { message?: string })?.message || 'Erreur', 'error');
+      setMessage((e as { message?: string })?.message || 'Erreur');
     } finally {
       setLoading(false);
     }
@@ -59,7 +59,7 @@ function Field({ label, ...props }: { label: string } & React.InputHTMLAttribute
   );
 }
 
-function ApprenantForm({ loading, onSubmit, message }: { loading: boolean; onSubmit: (v: any) => void; message: string | null }) {
+function ApprenantForm({ loading, onSubmit, message }: { loading: boolean; onSubmit: (v: unknown) => void; message: string | null }) {
   const [bio, setBio] = useState('');
   const [profession, setProfession] = useState('');
   return (
@@ -72,7 +72,7 @@ function ApprenantForm({ loading, onSubmit, message }: { loading: boolean; onSub
   );
 }
 
-function MentorForm({ loading, onSubmit, message }: { loading: boolean; onSubmit: (v: any) => void; message: string | null }) {
+function MentorForm({ loading, onSubmit, message }: { loading: boolean; onSubmit: (v: unknown) => void; message: string | null }) {
   const [specialite, setSpecialite] = useState('');
   const [experience, setExperience] = useState('');
   const [bio, setBio] = useState('');
@@ -87,7 +87,7 @@ function MentorForm({ loading, onSubmit, message }: { loading: boolean; onSubmit
   );
 }
 
-function PartenaireForm({ loading, onSubmit, message }: { loading: boolean; onSubmit: (v: any) => void; message: string | null }) {
+function PartenaireForm({ loading, onSubmit, message }: { loading: boolean; onSubmit: (v: unknown) => void; message: string | null }) {
   const [organisationName, setOrganisationName] = useState('');
   const [activitySector, setActivitySector] = useState('');
   const [juridicStatus, setJuridicStatus] = useState('');
