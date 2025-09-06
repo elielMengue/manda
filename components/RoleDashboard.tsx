@@ -1,7 +1,7 @@
 import React from "react";
 
 interface RoleDashboardProps {
-  role: "Admin" | "Mentor" | "Apprenant";
+  role: "Admin" | "Mentor" | "Apprenant" | "Partenaire";
   title: string;
   children: React.ReactNode;
 }
@@ -11,6 +11,7 @@ export default function RoleDashboard({ role, title, children }: RoleDashboardPr
     Admin: { bg: "bg-red-50", accent: "text-red-700" },
     Mentor: { bg: "bg-blue-50", accent: "text-blue-700" },
     Apprenant: { bg: "bg-green-50", accent: "text-green-700" },
+    Partenaire: { bg: "bg-purple-50", accent: "text-purple-700" },
   };
   return (
     <main className="mx-auto max-w-5xl p-6 space-y-6">
