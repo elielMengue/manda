@@ -16,9 +16,9 @@ export default async function CoursesPage({ searchParams }: { searchParams: Prom
         <div className="text-sm opacity-70">{data.total} cours</div>
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+      <div key={page} className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 animate-page-enter">
         {data.items.map((c) => (
-          <Link key={c.id} href={`/courses/${c.id}`} className="group rounded-lg border border-foreground/10 hover:border-foreground/20 p-4 flex flex-col">
+          <Link key={c.id} href={`/courses/${c.id}`} className="group rounded-lg border border-foreground/10 hover:border-foreground/20 p-4 flex flex-col transition-colors">
             <div className="aspect-video rounded-md bg-foreground/10 mb-3 overflow-hidden">
               {/* placeholder image */}
               {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -35,14 +35,14 @@ export default async function CoursesPage({ searchParams }: { searchParams: Prom
       <div className="mt-6 flex items-center justify-center gap-2">
         <Link
           href={`/courses?page=${Math.max(1, page - 1)}&pageSize=${pageSize}`}
-          className={`px-3 py-2 rounded-md border ${page <= 1 ? "opacity-50 pointer-events-none" : "hover:bg-foreground/5"}`}
+          className={`px-3 py-2 rounded-md border transition-colors ${page <= 1 ? "opacity-50 pointer-events-none" : "hover:bg-foreground/5"}`}
         >
           Précédent
         </Link>
         <span className="text-sm opacity-70">Page {page}</span>
         <Link
           href={`/courses?page=${page + 1}&pageSize=${pageSize}`}
-          className={`px-3 py-2 rounded-md border ${data.items.length < pageSize ? "opacity-50 pointer-events-none" : "hover:bg-foreground/5"}`}
+          className={`px-3 py-2 rounded-md border transition-colors ${data.items.length < pageSize ? "opacity-50 pointer-events-none" : "hover:bg-foreground/5"}`}
         >
           Suivant
         </Link>
