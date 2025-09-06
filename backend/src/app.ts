@@ -1,4 +1,6 @@
 import express from "express";
+import path from "path";
+import fs from "fs";
 import cors from "cors";
 import cookieParser from "cookie-parser";
 import helmet from "helmet";
@@ -18,6 +20,11 @@ app.use(cors({ origin: env.corsOrigin, credentials: true }));
 app.use(express.json());
 app.use(cookieParser());
 app.use(morgan(env.nodeEnv === "production" ? "combined" : "dev"));
+
+// Static serving for uploaded assets (videos/images)
+const uploadsDir = path.join(process.cwd(), "uploads");
+try { fs.mkdirSync(uploadsDir, { recursive: true }); } catch {}
+app.use("/uploads", express.static(uploadsDir));
 
 app.get("/health", (_req, res) => {
   res.json({ status: "ok", service: "eduimpact-api", timestamp: new Date().toISOString() });

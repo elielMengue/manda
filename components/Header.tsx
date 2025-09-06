@@ -12,7 +12,6 @@ export default function Header() {
         <Link href="/" className="font-semibold">EduImpact</Link>
 
         <nav className="flex items-center gap-3 text-sm">
-          <Link href="/" className="opacity-80 hover:opacity-100">Accueil</Link>
           <Link href="/courses" className="opacity-80 hover:opacity-100">Cours</Link>
           <Link href="/my/courses" className="opacity-80 hover:opacity-100">Mes cours</Link>
           <Link href="/profile" className="opacity-80 hover:opacity-100">Profil</Link>

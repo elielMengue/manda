@@ -3,8 +3,10 @@
 import { useState } from 'react';
 import { signIn } from 'next-auth/react';
 import { toast } from '../lib/toast';
+import { useRouter } from 'next/navigation';
 
 export default function CredentialsLoginForm() {
+  const router = useRouter();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
@@ -13,8 +15,12 @@ export default function CredentialsLoginForm() {
     e.preventDefault(); setLoading(true);
     const res = await signIn('credentials', { email, password, redirect: false, callbackUrl: '/dashboard' });
     setLoading(false);
-    if (res?.ok) { window.location.href = res.url || '/dashboard'; }
-    else { toast(res?.error || 'Identifiants invalides', 'error'); }
+    if (res?.ok) {
+      // Avoid using res.url (may be the callback route, which only supports POST)
+      router.push('/dashboard');
+    } else {
+      toast(res?.error || 'Identifiants invalides', 'error');
+    }
   };
 
   return (

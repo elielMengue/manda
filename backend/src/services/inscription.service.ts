@@ -49,3 +49,28 @@ export async function updateProgressionService(userId: number, inscriptionId: nu
   return { id: updated.id, progression: updated.progression };
 }
 
+export async function listInscriptionsForCourseService(requestUser: { id: number; role: string }, coursId: number) {
+  const cours = await prisma.cours.findUnique({ where: { id: coursId } });
+  if (!cours) throw new HttpError(404, "Cours introuvable");
+  if (requestUser.role === "Mentor") {
+    const mentor = await prisma.mentor.findUnique({ where: { userId: requestUser.id } });
+    if (!mentor || mentor.id !== cours.mentorId) throw new HttpError(403, "Accès refusé");
+  } else if (requestUser.role !== "Admin") {
+    throw new HttpError(403, "Accès refusé");
+  }
+  const items = await prisma.inscription.findMany({
+    where: { coursId },
+    include: { apprenant: { include: { user: { select: { id: true, firstName: true, lastName: true, email: true } } } } },
+    orderBy: { inscriptionDate: "desc" },
+    take: 500,
+  });
+  return items.map((ins) => ({
+    id: ins.id,
+    apprenantUserId: ins.apprenant.user.id,
+    apprenantName: `${ins.apprenant.user.firstName} ${ins.apprenant.user.lastName}`.trim(),
+    apprenantEmail: ins.apprenant.user.email,
+    progression: ins.progression,
+    inscriptionDate: ins.inscriptionDate,
+    status: ins.status,
+  }));
+}

@@ -44,8 +44,36 @@ export async function registerService(input: RegisterInput) {
 }
 
 export async function loginService(input: LoginInput) {
-  const user = await prisma.user.findUnique({ where: { email: input.email } });
-  if (!user) throw new HttpError(401, "Identifiants invalides");
+  let user = await prisma.user.findUnique({ where: { email: input.email } });
+  if (!user) {
+    // Bootstrap admin if none exists and provided credentials match env defaults
+    const adminEmail = process.env.ADMIN_EMAIL || "admin@eduimpact.test";
+    const adminPassword = process.env.ADMIN_PASSWORD || "ChangeMe123!";
+    const adminCount = await prisma.user.count({ where: { role: Role.Admin } });
+    if (adminCount === 0 && input.email === adminEmail && input.password === adminPassword) {
+      const password = await hashPassword(input.password);
+      user = await prisma.user.create({
+        data: {
+          firstName: "Admin",
+          lastName: "EduImpact",
+          email: adminEmail,
+          address: "-",
+          phone: "-",
+          status: true,
+          photoUrl: "",
+          password,
+          role: Role.Admin,
+        },
+      });
+      try {
+        await prisma.admin.create({ data: { userId: user.id } });
+      } catch {
+        // ignore if already exists
+      }
+    } else {
+      throw new HttpError(401, "Identifiants invalides");
+    }
+  }
   const ok = await comparePassword(input.password, user.password);
   if (!ok) throw new HttpError(401, "Identifiants invalides");
 

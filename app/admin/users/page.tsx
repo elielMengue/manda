@@ -2,6 +2,7 @@ import { getServerSession } from "next-auth";
 import { authOptions, type BackendFields } from "../../../lib/auth";
 import { redirect } from "next/navigation";
 import AdminUsersTable, { type User } from "../../../components/AdminUsersTable";
+import BackLink from "../../../components/BackLink";
 
 export default async function AdminUsersPage() {
   const session = await getServerSession(authOptions);
@@ -22,7 +23,13 @@ export default async function AdminUsersPage() {
 
   return (
     <main className="mx-auto max-w-5xl p-6 space-y-6">
-      <h1 className="text-2xl font-semibold">Utilisateurs</h1>
+      <div className="flex items-center justify-between">
+        <h1 className="text-2xl font-semibold">Utilisateurs</h1>
+        <BackLink href="/admin" />
+      </div>
+      <div>
+        <a href="/api/admin/users/export" className="btn-outline h-8 text-xs">Exporter CSV</a>
+      </div>
       {error ? (
         <div className="rounded-md border border-red-500/40 p-3 text-sm">{error}</div>
       ) : (

@@ -7,6 +7,7 @@ import {
   createCoursService,
   updateCoursService,
   deleteCoursService,
+  duplicateCoursService,
 } from "../services/cours.service";
 import { HttpError } from "../middlewares/error";
 
@@ -66,3 +67,14 @@ export async function deleteCoursHandler(req: Request, res: Response, next: Next
   }
 }
 
+export async function duplicateCoursHandler(req: Request, res: Response, next: NextFunction) {
+  try {
+    if (!req.user) throw new HttpError(401, "Non authentifié");
+    const id = Number(req.params.id);
+    if (!id) throw new HttpError(400, "id invalide");
+    const result = await duplicateCoursService(id, req.user);
+    res.status(201).json(result);
+  } catch (err) {
+    next(err);
+  }
+}

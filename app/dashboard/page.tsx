@@ -9,6 +9,7 @@ export default async function Dashboard() {
   if (role === 'Apprenant') redirect('/apprenant');
   if (role === 'Mentor') redirect('/mentor');
   if (role === 'Partenaire') redirect('/partenaire');
+  if (role === 'Admin') redirect('/admin');
 
   const apiBase = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8080";
   let me: unknown = null;

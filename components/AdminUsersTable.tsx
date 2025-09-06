@@ -24,7 +24,7 @@ export default function AdminUsersTable({ initial }: { initial: User[] }) {
     updateLocal(id, { role });
     try {
       await patchUser(id, { role });
-      toast('Rôle mis à jour ✅', 'success');
+      toast('Rôle mis à jour ✔️', 'success');
     } catch (e: unknown) {
       updateLocal(id, { role: prev });
       toast((e as { message?: string })?.message || 'Erreur', 'error');
@@ -36,7 +36,7 @@ export default function AdminUsersTable({ initial }: { initial: User[] }) {
     updateLocal(id, { status: !current });
     try {
       await patchUser(id, { status: !current });
-      toast('Statut mis à jour ✅', 'success');
+      toast('Statut mis à jour ✔️', 'success');
     } catch (e: unknown) {
       updateLocal(id, { status: current });
       toast((e as { message?: string })?.message || 'Erreur', 'error');
@@ -44,9 +44,9 @@ export default function AdminUsersTable({ initial }: { initial: User[] }) {
   };
 
   return (
-    <div className="rounded-md border border-foreground/10 overflow-hidden">
+    <div className="table-3d">
       <table className="w-full text-sm">
-        <thead className="bg-foreground/5">
+        <thead>
           <tr>
             <th className="text-left p-2">ID</th>
             <th className="text-left p-2">Nom</th>
@@ -54,6 +54,7 @@ export default function AdminUsersTable({ initial }: { initial: User[] }) {
             <th className="text-left p-2">Rôle</th>
             <th className="text-left p-2">Statut</th>
             <th className="text-left p-2">Créé le</th>
+            <th className="text-left p-2">Actions</th>
           </tr>
         </thead>
         <tbody>
@@ -73,11 +74,28 @@ export default function AdminUsersTable({ initial }: { initial: User[] }) {
                 <button onClick={() => onToggleStatus(u.id)} className="btn-outline h-8 text-xs">{u.status === false ? 'Inactif' : 'Actif'}</button>
               </td>
               <td className="p-2">{u.createdAt ? new Date(u.createdAt).toLocaleString() : '-'}</td>
+              <td className="p-2"><ResetPasswordButton userId={u.id} /></td>
             </tr>
           ))}
         </tbody>
       </table>
     </div>
   );
+}
+
+function ResetPasswordButton({ userId }: { userId: number }) {
+  const [loading, setLoading] = useState(false);
+  const onClick = async () => {
+    const pwd = window.prompt('Nouveau mot de passe (min 6 caractères):');
+    if (!pwd || pwd.length < 6) return;
+    setLoading(true);
+    try {
+      const res = await fetch(`/api/admin/users/${userId}/reset-password`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ newPassword: pwd }) });
+      const data = await res.json().catch(()=>null);
+      if (!res.ok) throw new Error(data?.error || `HTTP ${res.status}`);
+      toast('Mot de passe réinitialisé ✔️', 'success');
+    } catch (e: any) { toast(e?.message || 'Erreur', 'error'); } finally { setLoading(false); }
+  };
+  return <button onClick={onClick} disabled={loading} className="btn-ghost h-8 text-xs">{loading ? '…' : 'Réinitialiser'}</button>;
 }
 

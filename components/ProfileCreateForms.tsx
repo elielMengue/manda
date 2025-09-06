@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { toast } from '../lib/toast';
 
-export default function ProfileCreateForms({ onSuccess }: { onSuccess?: (role: 'Apprenant' | 'Mentor' | 'Partenaire') => void }) {
+export default function ProfileCreateForms() {
   const router = useRouter();
   const [tab, setTab] = useState<'apprenant' | 'mentor' | 'partenaire'>('apprenant');
   const [loading, setLoading] = useState(false);
@@ -21,12 +21,11 @@ export default function ProfileCreateForms({ onSuccess }: { onSuccess?: (role: '
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data?.error || `HTTP ${res.status}`);
-      toast('Profil créé ✅', 'success');
-      setMessage('Profil créé ✅');
-      if (endpoint.includes('apprenant')) onSuccess?.('Apprenant');
-      if (endpoint.includes('mentor')) onSuccess?.('Mentor');
-      if (endpoint.includes('partenaire')) onSuccess?.('Partenaire');
-      router.refresh();
+      toast('Profil créé ✔️', 'success');
+      setMessage('Profil créé ✔️');
+      if (endpoint.includes('apprenant')) router.push('/apprenant');
+      else if (endpoint.includes('mentor')) router.push('/mentor');
+      else if (endpoint.includes('partenaire')) router.push('/partenaire');
     } catch (e: unknown) {
       toast((e as { message?: string })?.message || 'Erreur', 'error');
       setMessage((e as { message?: string })?.message || 'Erreur');
@@ -109,3 +108,4 @@ function PartenaireForm({ loading, onSubmit, message }: { loading: boolean; onSu
     </form>
   );
 }
+

@@ -1,8 +1,19 @@
 import { Suspense } from 'react';
+import { getServerSession } from 'next-auth';
+import { redirect } from 'next/navigation';
+import { authOptions, type BackendFields } from '../lib/auth';
 import { FiAward, FiUsers, FiTrendingUp } from 'react-icons/fi';
 import HealthStatus from '../components/HealthStatus';
 
 export default async function Home() {
+  // If logged in, redirect to role-specific dashboard
+  const session = await getServerSession(authOptions);
+  const role = (session as BackendFields | null)?.backendRole as string | undefined;
+  if (role === 'Apprenant') redirect('/apprenant');
+  if (role === 'Mentor') redirect('/mentor');
+  if (role === 'Partenaire') redirect('/partenaire');
+  if (role === 'Admin') redirect('/admin');
+
   const apiBase = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8080";
 
   return (

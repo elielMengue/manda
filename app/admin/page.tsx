@@ -17,24 +17,64 @@ export default async function AdminHome() {
 
   return (
     <RoleDashboard role="Admin" title="Espace Administrateur">
+      {/* KPIs */}
+      <section className="grid grid-cols-1 sm:grid-cols-4 gap-3">
+        <Kpi label="Utilisateurs" apiKey="users.total" />
+        <Kpi label="Cours" apiKey="contents.courses" />
+        <Kpi label="Inscriptions" apiKey="activity.inscriptions" />
+        <Kpi label="Certificats" apiKey="activity.certificates" />
+      </section>
+
       <section className="card p-4 space-y-3">
         <div className="text-sm opacity-70">Inviter un Mentor ou Partenaire</div>
         <AdminInviteForm />
       </section>
+
       <section className="grid grid-cols-1 sm:grid-cols-3 gap-3">
         <Link href="/admin/users" className="card p-4 hover:bg-foreground/5 transition-colors">
           <div className="font-medium">Gérer les utilisateurs</div>
-          <div className="text-sm opacity-80">Liste et contrôle des rôles</div>
+          <div className="text-sm opacity-80">Liste, rôles, statuts</div>
+        </Link>
+        <Link href="/admin/courses" className="card p-4 hover:bg-foreground/5 transition-colors">
+          <div className="font-medium">Gérer les cours</div>
+          <div className="text-sm opacity-80">Créer, ouvrir, supprimer</div>
+        </Link>
+        <Link href="/admin/posts" className="card p-4 hover:bg-foreground/5 transition-colors">
+          <div className="font-medium">Modérer les posts</div>
+          <div className="text-sm opacity-80">Publier / fermer / supprimer</div>
         </Link>
         <Link href="/certificates/issue" className="card p-4 hover:bg-foreground/5 transition-colors">
           <div className="font-medium">Émettre un certificat</div>
           <div className="text-sm opacity-80">Mentor/Admin</div>
         </Link>
-        <Link href="/mentor" className="card p-4 hover:bg-foreground/5 transition-colors">
-          <div className="font-medium">Cours et contenus</div>
-          <div className="text-sm opacity-80">Accès à l’espace Mentor</div>
+        <Link href="/admin/notify" className="card p-4 hover:bg-foreground/5 transition-colors">
+          <div className="font-medium">Notifications</div>
+          <div className="text-sm opacity-80">Diffusion ciblée</div>
+        </Link>
+        <Link href="/admin/messages" className="card p-4 hover:bg-foreground/5 transition-colors">
+          <div className="font-medium">Messages</div>
+          <div className="text-sm opacity-80">Privés à tous/role/ID</div>
+        </Link>
+        <Link href="/admin/profile" className="card p-4 hover:bg-foreground/5 transition-colors">
+          <div className="font-medium">Profil admin</div>
+          <div className="text-sm opacity-80">Informations et avatar</div>
         </Link>
       </section>
     </RoleDashboard>
+  );
+}
+
+async function Kpi({ label, apiKey }: { label: string; apiKey: string }) {
+  let value: any = '—';
+  try {
+    const res = await fetch(`/api/admin/metrics`, { cache: 'no-store' });
+    const data = await res.json();
+    value = apiKey.split('.').reduce((acc: any, k: string) => (acc ? acc[k] : undefined), data) ?? '—';
+  } catch {}
+  return (
+    <div className="card p-4">
+      <div className="text-xs opacity-60">{label}</div>
+      <div className="text-2xl font-semibold">{value}</div>
+    </div>
   );
 }

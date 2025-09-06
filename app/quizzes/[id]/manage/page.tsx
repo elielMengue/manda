@@ -1,24 +1,23 @@
-import { getServerSession } from "next-auth";
-import { authOptions, type BackendFields } from "../../../../lib/auth";
-import { redirect } from "next/navigation";
-import { getQuizFull } from "../../../../lib/api/quizzes";
-import { useState } from 'react';
+"use client";
+
+import { useEffect, useState } from 'react';
 import { toast } from "../../../../lib/toast";
 
-export default async function ManageQuizPage({ params }: { params: Promise<{ id: string }> }) {
-  const { id } = await params;
-  const quizId = Number(id);
-  const session = await getServerSession(authOptions);
-  if (!session) redirect('/login');
-  const role = (session as BackendFields).backendRole as string | undefined;
-  if (role !== 'Mentor' && role !== 'Admin') redirect(`/quizzes/${quizId}`);
-
-  const token = (session as BackendFields).backendAccessToken as string;
-  const quiz = await getQuizFull(quizId, token).catch(() => null);
-
+export default function ManageQuizPage({ params }: any) {
+  const quizId = Number(params?.id);
+  const [quiz, setQuiz] = useState<{ questions: Question[] } | null>(null);
+  useEffect(() => {
+    (async () => {
+      try {
+        const res = await fetch(`/api/quizzes/${quizId}/questions`);
+        const data = await res.json();
+        if (Array.isArray(data)) setQuiz({ questions: data as any });
+      } catch {}
+    })();
+  }, [quizId]);
   return (
     <main className="mx-auto max-w-4xl p-6 space-y-6">
-      <h1 className="text-2xl font-semibold">Gérer le quiz: {quiz?.titre || quizId}</h1>
+      <h1 className="text-2xl font-semibold">Gérer le quiz: {quizId}</h1>
       <section className="rounded-md border border-foreground/15 p-4">
         <div className="text-sm opacity-70 mb-2">Ajouter une question</div>
         <AddQuestionForm quizId={quizId} />
@@ -76,7 +75,7 @@ function AddQuestionForm({ quizId }: { quizId: number }) {
       const res = await fetch(`/api/quizzes/${quizId}/questions`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(form) });
       const data = await res.json();
       if (!res.ok) throw new Error(data?.error || `HTTP ${res.status}`);
-      toast('Question ajoutée ✅', 'success');
+      toast('Question ajoutée ✔️', 'success');
     } catch (e: unknown) {
       toast((e as { message?: string })?.message || 'Erreur', 'error');
     } finally { setLoading(false); }
@@ -109,7 +108,7 @@ function AddOptionForm({ questionId }: { questionId: number }) {
     try {
       const res = await fetch(`/api/questions/${questionId}/options`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(form) });
       const data = await res.json(); if (!res.ok) throw new Error(data?.error || `HTTP ${res.status}`);
-      toast('Option ajoutée ✅', 'success');
+      toast('Option ajoutée ✔️', 'success');
       setForm({ optionText: '', isCorrect: false });
     } catch (e: unknown) { toast((e as { message?: string })?.message || 'Erreur', 'error'); } finally { setLoading(false); }
   };
@@ -130,7 +129,7 @@ function AddAnswerForm({ questionId }: { questionId: number }) {
     try {
       const res = await fetch(`/api/questions/${questionId}/reponses`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ reponseText, isCorrect: true }) });
       const data = await res.json(); if (!res.ok) throw new Error(data?.error || `HTTP ${res.status}`);
-      toast('Réponse ajoutée ✅', 'success');
+      toast('Réponse ajoutée ✔️', 'success');
       setReponseText('');
     } catch (e: unknown) { toast((e as { message?: string })?.message || 'Erreur', 'error'); } finally { setLoading(false); }
   };

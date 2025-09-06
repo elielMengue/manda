@@ -25,10 +25,11 @@ export default async function Sidebar() {
     } catch {}
   }
 
+  // Barre latérale pour utilisateurs connectés: pas de lien "Accueil"
   const common: NavItem[] = [
-    { href: "/", label: "Accueil", icon: 'home' },
     { href: "/courses", label: "Cours", icon: 'book' },
-    { href: "/my/courses", label: "Mes cours", icon: 'grid' },
+    // "Mes cours" est réservé aux apprenants (inscriptions)
+    ...(role === "Apprenant" ? ([{ href: "/my/courses", label: "Mes cours", icon: 'grid' }] as NavItem[]) : []),
     { href: "/notifications", label: "Notifications", icon: 'bell', badge: unread },
     { href: "/messages", label: "Messages", icon: 'message', badge: convCount },
     { href: "/profile", label: "Profil", icon: 'user' },
@@ -46,15 +47,20 @@ export default async function Sidebar() {
     { href: "/partenaire", label: "Espace Partenaire", icon: 'briefcase' },
   ];
 
-  const sections: Array<{ title: string; items: NavItem[] }> = [{ title: "Général", items: common }];
+  const sections: Array<{ title: string; items: NavItem[] }> = [];
   if (role === "Apprenant") sections.push({ title: "Apprenant", items: apprenant });
   if (role === "Mentor") sections.push({ title: "Mentor", items: mentor });
   if (role === "Partenaire") sections.push({ title: "Partenaire", items: partenaire });
-  if (role === "Admin") sections.push({ title: "Admin", items: [
-    { href: "/admin", label: "Tableau de bord", icon: 'grid' },
-    { href: "/certificates/issue", label: "Émettre certificats", icon: 'award' },
-    { href: "/admin/users", label: "Utilisateurs", icon: 'user' },
-  ]});
+  if (role === "Admin")
+    sections.push({
+      title: "Admin",
+      items: [
+        { href: "/admin", label: "Tableau de bord", icon: 'grid' },
+        { href: "/certificates/issue", label: "Émettre certificats", icon: 'award' },
+        { href: "/admin/users", label: "Utilisateurs", icon: 'user' },
+      ],
+    });
+  sections.push({ title: "Général", items: common });
 
   const userName = session?.user?.name as string | undefined;
   const userEmail = session?.user?.email as string | undefined;

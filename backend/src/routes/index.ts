@@ -11,6 +11,9 @@ import messageRoutes from "./message.routes";
 import postRoutes from "./post.routes";
 import certificatRoutes from "./certificat.routes";
 import profileRoutes from "./profile.routes";
+import uploadRoutes from "./upload.routes";
+import mentorRoutes from "./mentor.routes";
+import adminRoutes from "./admin.routes";
 import { requireAuth } from "../middlewares/auth";
 
 const router = Router();
@@ -27,6 +30,9 @@ router.use("/", messageRoutes);
 router.use("/", postRoutes);
 router.use("/", certificatRoutes);
 router.use("/", profileRoutes);
+router.use("/", uploadRoutes);
+router.use("/", mentorRoutes);
+router.use("/", adminRoutes);
 
 router.get("/me", requireAuth, (req, res) => {
   res.json({ user: req.user });

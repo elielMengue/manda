@@ -20,11 +20,7 @@ export default async function OnboardingPage({ searchParams }: { searchParams: P
     <main className="mx-auto max-w-3xl p-6 space-y-4">
       <h1 className="text-2xl font-semibold">Bienvenue !</h1>
       <p className="text-sm opacity-80">Choisissez votre rôle et complétez quelques informations pour personnaliser votre espace.</p>
-      <ProfileCreateForms onSuccess={(r) => {
-        if (r === 'Apprenant') { window.location.href = '/apprenant'; }
-        else if (r === 'Mentor') { window.location.href = '/mentor'; }
-        else { window.location.href = '/partenaire'; }
-      }} />
+      <ProfileCreateForms />
       <p className="text-xs opacity-70">Après création du profil, vous serez redirigé vers votre tableau de bord.</p>
     </main>
   );

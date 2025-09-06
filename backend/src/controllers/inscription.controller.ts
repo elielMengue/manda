@@ -1,5 +1,5 @@
 import type { Request, Response, NextFunction } from "express";
-import { enrollService, listMyInscriptionsService, updateProgressionService } from "../services/inscription.service";
+import { enrollService, listMyInscriptionsService, updateProgressionService, listInscriptionsForCourseService } from "../services/inscription.service";
 import { HttpError } from "../middlewares/error";
 import { updateProgressSchema } from "../validators/inscription.schema";
 
@@ -33,3 +33,12 @@ export async function updateProgressionHandler(req: Request, res: Response, next
   } catch (err) { next(err); }
 }
 
+export async function listInscriptionsForCourseHandler(req: Request, res: Response, next: NextFunction) {
+  try {
+    if (!req.user) throw new HttpError(401, "Non authentifié");
+    const coursId = Number(req.params.coursId);
+    if (!coursId) throw new HttpError(400, "coursId invalide");
+    const items = await listInscriptionsForCourseService(req.user, coursId);
+    res.json(items);
+  } catch (err) { next(err); }
+}

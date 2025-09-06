@@ -6,8 +6,8 @@ import { jsonFetch } from "../../../../lib/http";
 export async function POST(req: Request) {
   const session = await getServerSession(authOptions);
   if (!session) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-  const role = (session as unknown).backendRole as string | undefined;
-  const email = (session as unknown)?.user?.email as string | undefined;
+  const role = (session as any).backendRole as string | undefined;
+  const email = (session as any)?.user?.email as string | undefined;
   if (role !== 'Admin' || !email) return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
   const { password } = await req.json();
   try {
