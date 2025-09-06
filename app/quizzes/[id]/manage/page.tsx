@@ -1,10 +1,12 @@
 "use client";
 
 import { useEffect, useState } from 'react';
+import { useParams } from 'next/navigation';
 import { toast } from "../../../../lib/toast";
 
-export default function ManageQuizPage({ params }: { params: { id: string } }) {
-  const quizId = Number(params?.id);
+export default function ManageQuizPage() {
+  const { id } = useParams<{ id: string }>();
+  const quizId = Number(id);
   const [quiz, setQuiz] = useState<{ questions: Question[] } | null>(null);
   useEffect(() => {
     (async () => {
