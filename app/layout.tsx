@@ -2,14 +2,8 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 
-export const dynamic = 'force-dynamic';
-
 import Providers from "../components/Providers";
-import Sidebar from "../components/Sidebar";
-import PublicHeader from "../components/PublicHeader";
-import PublicFooter from "../components/PublicFooter";
-import { getServerSession } from "next-auth";
-import { authOptions } from "../lib/auth";
+import AuthLayoutContent from "../components/AuthLayoutContent";
 import ToastProvider from "../components/ToastProvider";
 
 const geistSans = Geist({
@@ -32,27 +26,13 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const session = await getServerSession(authOptions);
   return (
     <html lang="en">
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
         <Providers>
-          {session ? (
-            <div className="flex min-h-screen">
-              <Sidebar />
-              <div className="flex-1 min-w-0">
-                {children}
-              </div>
-            </div>
-          ) : (
-            <div className="min-h-screen flex flex-col">
-              <PublicHeader />
-              <div className="flex-1 min-w-0">
-                {children}
-              </div>
-              <PublicFooter />
-            </div>
-          )}
+          <AuthLayoutContent>
+            {children}
+          </AuthLayoutContent>
           <ToastProvider />
         </Providers>
       </body>
