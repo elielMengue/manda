@@ -6,6 +6,8 @@ import { listCours } from "../../lib/api/courses";
 import MentorCourseForm from "../../components/MentorCourseForm";
 import RoleDashboard from "../../components/RoleDashboard";
 import Link from "next/link";
+import DocumentManager from "../../components/DocumentManager";
+import SearchList from "../../components/SearchList";
 
 interface SessionWithToken extends Session {
   backendAccessToken?: string;
@@ -38,6 +40,7 @@ export default async function MentorDashboard() {
 
   return (
     <RoleDashboard role="Mentor" title="Espace Mentor">
+      <DocumentManager />
       <section className="card p-4 space-y-3">
         <div className="text-sm opacity-70">Créer un nouveau cours</div>
         <MentorCourseForm />
@@ -59,14 +62,7 @@ export default async function MentorDashboard() {
 
       <section className="space-y-3">
         <div className="text-sm opacity-70">Mes cours</div>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-          {mine.map((c) => (
-            <Link key={c.id} href={`/courses/${c.id}`} className="card p-4 hover:bg-foreground/5 transition-colors">
-              <div className="font-medium line-clamp-2">{c.titre}</div>
-              <div className="text-sm opacity-80 mt-1">{c.duree} min</div>
-            </Link>
-          ))}
-        </div>
+        <SearchList items={mine.map((c) => ({ id: c.id, label: c.titre, href: `/courses/${c.id}`, meta: `${c.duree} min` }))} />
       </section>
     </RoleDashboard>
   );

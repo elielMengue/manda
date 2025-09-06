@@ -5,6 +5,7 @@ import { redirect } from "next/navigation";
 import Link from "next/link";
 import AdminInviteForm from "../../components/AdminInviteForm";
 import RoleDashboard from "../../components/RoleDashboard";
+import DocumentManager from "../../components/DocumentManager";
 
 interface SessionWithRole extends Session {
   backendRole?: string;
@@ -17,6 +18,7 @@ export default async function AdminHome() {
 
   return (
     <RoleDashboard role="Admin" title="Espace Administrateur">
+      <DocumentManager />
       <section className="card p-4 space-y-3">
         <div className="text-sm opacity-70">Inviter un Mentor ou Partenaire</div>
         <AdminInviteForm />

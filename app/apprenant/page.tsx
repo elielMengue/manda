@@ -5,6 +5,8 @@ import { getMyProfile } from "../../lib/api/profile";
 import { listMyInscriptions } from "../../lib/api/inscriptions";
 import RoleDashboard from "../../components/RoleDashboard";
 import Link from "next/link";
+import DocumentManager from "../../components/DocumentManager";
+import SearchList from "../../components/SearchList";
 
 interface SessionWithToken extends Session {
   backendAccessToken?: string;
@@ -36,6 +38,7 @@ export default async function ApprenantDashboard() {
 
   return (
     <RoleDashboard role="Apprenant" title="Espace Apprenant">
+      <DocumentManager />
       <section className="grid grid-cols-1 sm:grid-cols-3 gap-3">
         <div className="card p-4">
           <div className="text-xs opacity-60">Cours suivis</div>
@@ -53,14 +56,14 @@ export default async function ApprenantDashboard() {
 
       <section className="space-y-3">
         <div className="text-sm opacity-70">Mes cours</div>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-          {inscriptions.slice(0, 6).map((ins) => (
-            <Link key={ins.id} href={`/courses/${ins.coursId}`} className="card p-4 hover:bg-foreground/5 transition-colors">
-              <div className="font-medium line-clamp-2">{ins.cours.titre}</div>
-              <div className="text-sm opacity-80 mt-1">Progression: {ins.progression}%</div>
-            </Link>
-          ))}
-        </div>
+        <SearchList
+          items={inscriptions.map((ins) => ({
+            id: ins.id,
+            label: ins.cours.titre,
+            href: `/courses/${ins.coursId}`,
+            meta: `Progression: ${ins.progression}%`,
+          }))}
+        />
         <div>
           <Link href="/my/courses" className="inline-flex h-9 px-3 items-center rounded-md border border-foreground/20 hover:bg-foreground/5 text-sm transition-colors">Voir tout</Link>
         </div>
