@@ -77,7 +77,7 @@ export default async function CoursDetailPage({ params }: { params: Promise<{ id
               </table>
             </div>
           ) : (
-            <div className="text-sm opacity-70">Aucune inscription pour l'instant.</div>
+            <div className="text-sm opacity-70">Aucune inscription pour l’instant.</div>
           )}
         </section>
       )}

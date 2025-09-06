@@ -3,11 +3,12 @@
 import { useState } from 'react';
 import { toast } from '../lib/toast';
 import { useSession } from 'next-auth/react';
+import type { BackendFields } from '../lib/auth';
 import { jsonFetch } from '../lib/http';
 
 export default function AddLessonForm({ moduleId }: { moduleId: number }) {
   const { data } = useSession();
-  const token = (data as any)?.backendAccessToken as string | undefined;
+  const token = (data as BackendFields | null)?.backendAccessToken;
   const [form, setForm] = useState({ titre: '', textContenu: '', duree: 10, type: 'video', ordre: 0, videoUrl: '' });
   const [loading, setLoading] = useState(false);
   const [uploading, setUploading] = useState(false);
@@ -24,8 +25,8 @@ export default function AddLessonForm({ moduleId }: { moduleId: number }) {
       const res = await jsonFetch<{ url: string }>(`/api/v1/uploads/video`, { method: 'POST', token, body: fd });
       setForm((f) => ({ ...f, videoUrl: res.url }));
       toast('Vidéo uploadée', 'success');
-    } catch (err: any) {
-      toast(err?.message || 'Echec upload', 'error');
+    } catch (err: unknown) {
+      toast((err as { message?: string })?.message || 'Echec upload', 'error');
     } finally {
       setUploading(false);
       e.currentTarget.value = '';

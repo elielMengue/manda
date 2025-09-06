@@ -51,7 +51,7 @@ export default async function ProfilePage() {
           </div>
         </div>
         <div className="flex items-center gap-2 shrink-0">
-          {(session as any)?.backendRole !== 'Admin' && (
+          {(session as BackendFields)?.backendRole !== 'Admin' && (
             <>
               <Link href="/my/courses" className="btn-outline h-9 text-sm">Mes cours</Link>
               <Link href="/certificates" className="btn-outline h-9 text-sm">Mes certificats</Link>
@@ -59,7 +59,7 @@ export default async function ProfilePage() {
           )}
           <Link href="/notifications" className="btn-outline h-9 text-sm">Notifications</Link>
           <Link href="/messages" className="btn-outline h-9 text-sm">Messages</Link>
-          {(session as any)?.backendRole === 'Admin' && (
+          {(session as BackendFields)?.backendRole === 'Admin' && (
             <Link href="/admin" className="btn-accent h-9 text-sm">Dashboard Admin</Link>
           )}
           <form action="/api/auth/signout" method="post">

@@ -2,7 +2,6 @@
 
 import { useState } from 'react';
 import { toast } from '../lib/toast';
-import Image from 'next/image';
 
 type MePatch = { firstName?: string; lastName?: string; address?: string; phone?: string; photoUrl?: string };
 
@@ -23,7 +22,9 @@ export default function ProfileEditForm({ initial }: { initial?: MePatch }) {
       const data = await res.json().catch(()=>null);
       if (!res.ok) throw new Error(data?.error || `HTTP ${res.status}`);
       toast('Profil mis à jour ✔️', 'success');
-    } catch (e: any) { toast(e?.message || 'Erreur', 'error'); } finally { setLoading(false); }
+    } catch (e: unknown) {
+      toast((e as { message?: string })?.message || 'Erreur', 'error');
+    } finally { setLoading(false); }
   };
   const onAvatar = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.currentTarget.files?.[0];
@@ -36,7 +37,9 @@ export default function ProfileEditForm({ initial }: { initial?: MePatch }) {
       if (!res.ok) throw new Error(data?.error || `HTTP ${res.status}`);
       setForm((f)=>({ ...f, photoUrl: data.url }));
       toast('Image uploadée ✔️', 'success');
-    } catch (err: any) { toast(err?.message || 'Upload échoué', 'error'); }
+    } catch (err: unknown) {
+      toast((err as { message?: string })?.message || 'Upload échoué', 'error');
+    }
     finally { e.currentTarget.value = ''; }
   };
   return (

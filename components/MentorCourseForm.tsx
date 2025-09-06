@@ -40,7 +40,7 @@ export default function MentorCourseForm() {
         imageUrl: "",
       });
       try {
-        (router as any).refresh?.();
+        router.refresh();
       } catch {}
     } catch (e: unknown) {
       toast((e as { message?: string })?.message || "Erreur", "error");

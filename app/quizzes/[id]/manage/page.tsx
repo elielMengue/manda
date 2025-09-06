@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react';
 import { toast } from "../../../../lib/toast";
 
-export default function ManageQuizPage({ params }: any) {
+export default function ManageQuizPage({ params }: { params: { id: string } }) {
   const quizId = Number(params?.id);
   const [quiz, setQuiz] = useState<{ questions: Question[] } | null>(null);
   useEffect(() => {
@@ -11,7 +11,7 @@ export default function ManageQuizPage({ params }: any) {
       try {
         const res = await fetch(`/api/quizzes/${quizId}/questions`);
         const data = await res.json();
-        if (Array.isArray(data)) setQuiz({ questions: data as any });
+        if (Array.isArray(data)) setQuiz({ questions: data as Question[] });
       } catch {}
     })();
   }, [quizId]);

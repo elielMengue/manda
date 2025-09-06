@@ -48,7 +48,7 @@ export default async function PartnerDashboard() {
               <div className="text-sm opacity-80 line-clamp-2">{p.content}</div>
             </div>
           ))}
-          {mine.length === 0 && <div className="text-sm opacity-70">Aucune publication pour l'instant.</div>}
+          {mine.length === 0 && <div className="text-sm opacity-70">Aucune publication pour l’instant.</div>}
         </div>
       </section>
     </RoleDashboard>

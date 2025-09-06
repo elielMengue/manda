@@ -7,7 +7,7 @@ type Mentor = { id: number; userId: number; firstName: string; lastName: string;
 
 export default function AdminCourseForm() {
   const [form, setForm] = useState({ titre: '', description: '', duree: 60, status: 'draft', imageUrl: '' });
-  const [mentorId, setMentorId] = useState<number | ''>('' as any);
+  const [mentorId, setMentorId] = useState<number | ''>('');
   const [loading, setLoading] = useState(false);
   const [mentors, setMentors] = useState<Mentor[]>([]);
 
@@ -28,8 +28,11 @@ export default function AdminCourseForm() {
       const res = await fetch('/api/courses', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ ...form, mentorId }) });
       const data = await res.json(); if (!res.ok) throw new Error(data?.error || `HTTP ${res.status}`);
       toast('Cours créé ✔️', 'success');
-      setForm({ titre: '', description: '', duree: 60, status: 'draft', imageUrl: '' }); setMentorId('' as any);
-    } catch (e: any) { toast(e?.message || 'Erreur', 'error'); } finally { setLoading(false); }
+      setForm({ titre: '', description: '', duree: 60, status: 'draft', imageUrl: '' });
+      setMentorId('');
+    } catch (e: unknown) {
+      toast((e as { message?: string })?.message || 'Erreur', 'error');
+    } finally { setLoading(false); }
   };
 
   return (
@@ -46,7 +49,12 @@ export default function AdminCourseForm() {
 
       <label className="block text-sm">
         <span className="opacity-80">Mentor</span>
-        <select value={mentorId} onChange={(e)=>setMentorId(Number(e.currentTarget.value)||'' as any)} className="mt-1 w-full rounded-md border border-foreground/20 bg-transparent px-3 py-2 text-sm" required>
+        <select
+          value={mentorId}
+          onChange={(e) => setMentorId(Number(e.currentTarget.value) || '')}
+          className="mt-1 w-full rounded-md border border-foreground/20 bg-transparent px-3 py-2 text-sm"
+          required
+        >
           <option value="">Choisir…</option>
           {mentors.map((m) => (
             <option key={m.id} value={m.id}>{m.firstName} {m.lastName} — {m.email}</option>

@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { getServerSession } from "next-auth";
-import { authOptions } from "../../../../../lib/auth";
+import { authOptions, type BackendFields } from "../../../../../lib/auth";
 import { jsonFetch } from "../../../../../lib/http";
 
 export async function POST(_req: Request, { params }: { params: Promise<{ id: string }> }) {
@@ -8,8 +8,14 @@ export async function POST(_req: Request, { params }: { params: Promise<{ id: st
   if (!session) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   const { id } = await params;
   try {
-    const data = await jsonFetch(`/api/v1/cours/${Number(id)}/duplicate`, { method: 'POST', token: (session as any).backendAccessToken });
+    const data = await jsonFetch(`/api/v1/cours/${Number(id)}/duplicate`, {
+      method: 'POST',
+      token: (session as BackendFields).backendAccessToken,
+    });
     return NextResponse.json(data, { status: 201 });
-  } catch (e: any) { return NextResponse.json({ error: e?.message || 'Erreur' }, { status: e?.status || 500 }); }
+  } catch (e: unknown) {
+    const { message, status } = e as { message?: string; status?: number };
+    return NextResponse.json({ error: message || 'Erreur' }, { status: status || 500 });
+  }
 }
 

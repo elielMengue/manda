@@ -6,14 +6,16 @@ import { toast } from '../lib/toast';
 export default function MentorEditCourseForm({ id, initial }: { id: number; initial: { titre: string; description: string; duree: number; status: string; imageUrl: string } }) {
   const [form, setForm] = useState(initial);
   const [loading, setLoading] = useState(false);
-  const set = (k: string, v: any) => setForm((f) => ({ ...f, [k]: v }));
+  const set = (k: string, v: unknown) => setForm((f) => ({ ...f, [k]: v }));
   const submit = async (e: React.FormEvent) => {
     e.preventDefault(); setLoading(true);
     try {
       const res = await fetch(`/api/courses/${id}`, { method: 'PATCH', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(form) });
       const data = await res.json(); if (!res.ok) throw new Error(data?.error || `HTTP ${res.status}`);
       toast('Cours mis à jour ✔️', 'success');
-    } catch (e: any) { toast(e?.message || 'Erreur', 'error'); } finally { setLoading(false); }
+    } catch (e: unknown) {
+      toast((e as { message?: string })?.message || 'Erreur', 'error');
+    } finally { setLoading(false); }
   };
   return (
     <form onSubmit={submit} className="space-y-3">

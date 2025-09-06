@@ -15,7 +15,9 @@ export default function DuplicateCourseButton({ id }: { id: number }) {
       if (!res.ok) throw new Error(data?.error || `HTTP ${res.status}`);
       toast('Cours dupliqué ✔️', 'success');
       router.refresh();
-    } catch (e: any) { toast(e?.message || 'Erreur', 'error'); } finally { setLoading(false); }
+    } catch (e: unknown) {
+      toast((e as { message?: string })?.message || 'Erreur', 'error');
+    } finally { setLoading(false); }
   };
   return <button onClick={onClick} disabled={loading} className="btn-ghost h-8 text-xs">{loading? '…' : 'Dupliquer'}</button>;
 }

@@ -13,7 +13,9 @@ export default function AdminEditCourseForm({ id, initial }: { id: number; initi
       const res = await fetch(`/api/admin/courses/${id}`, { method: 'PATCH', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(form) });
       const data = await res.json(); if (!res.ok) throw new Error(data?.error || `HTTP ${res.status}`);
       toast('Cours mis à jour ✔️', 'success');
-    } catch (e: any) { toast(e?.message || 'Erreur', 'error'); } finally { setLoading(false); }
+    } catch (e: unknown) {
+      toast((e as { message?: string })?.message || 'Erreur', 'error');
+    } finally { setLoading(false); }
   };
   return (
     <form onSubmit={submit} className="space-y-3">

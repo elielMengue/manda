@@ -15,15 +15,19 @@ export default function AdminNotifyForm() {
     e.preventDefault();
     setLoading(true);
     try {
-      const body: any = { title, content };
+      const body: Record<string, unknown> = { title, content };
       if (mode === 'role') body.role = role;
-      if (mode === 'users') body.userIds = userIds.split(',').map(s => Number(s.trim())).filter(Boolean);
+      if (mode === 'users') body.userIds = userIds.split(',').map((s) => Number(s.trim())).filter(Boolean);
       const res = await fetch('/api/admin/notify', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
       const data = await res.json();
       if (!res.ok) throw new Error(data?.error || `HTTP ${res.status}`);
       toast(`Notification envoyée (${data?.created ?? 0}) ✔️`, 'success');
-      setTitle(''); setContent(''); setUserIds('');
-    } catch (e: any) { toast(e?.message || 'Erreur', 'error'); } finally { setLoading(false); }
+      setTitle('');
+      setContent('');
+      setUserIds('');
+    } catch (e: unknown) {
+      toast((e as { message?: string })?.message || 'Erreur', 'error');
+    } finally { setLoading(false); }
   };
 
   return (
@@ -32,7 +36,11 @@ export default function AdminNotifyForm() {
         <Field label="Titre" value={title} onChange={(e) => setTitle(e.currentTarget.value)} required />
         <label className="block text-sm">
           <span className="opacity-80">Cible</span>
-          <select value={mode} onChange={(e)=>setMode(e.currentTarget.value as any)} className="mt-1 w-full rounded-md border border-foreground/20 bg-transparent px-3 py-2 text-sm">
+          <select
+            value={mode}
+            onChange={(e) => setMode(e.currentTarget.value as 'all' | 'role' | 'users')}
+            className="mt-1 w-full rounded-md border border-foreground/20 bg-transparent px-3 py-2 text-sm"
+          >
             <option value="all">Tous</option>
             <option value="role">Par rôle</option>
             <option value="users">Par IDs</option>
@@ -42,8 +50,16 @@ export default function AdminNotifyForm() {
       {mode === 'role' && (
         <label className="block text-sm">
           <span className="opacity-80">Rôle</span>
-          <select value={role} onChange={(e)=>setRole(e.currentTarget.value as any)} className="mt-1 w-full rounded-md border border-foreground/20 bg-transparent px-3 py-2 text-sm">
-            {(['Admin','Apprenant','Mentor','Partenaire'] as const).map(r => <option key={r} value={r}>{r}</option>)}
+          <select
+            value={role}
+            onChange={(e) => setRole(e.currentTarget.value as 'Admin' | 'Apprenant' | 'Mentor' | 'Partenaire')}
+            className="mt-1 w-full rounded-md border border-foreground/20 bg-transparent px-3 py-2 text-sm"
+          >
+            {(['Admin', 'Apprenant', 'Mentor', 'Partenaire'] as const).map((r) => (
+              <option key={r} value={r}>
+                {r}
+              </option>
+            ))}
           </select>
         </label>
       )}

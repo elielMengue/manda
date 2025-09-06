@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { getServerSession } from "next-auth";
-import { authOptions } from "../../../../lib/auth";
+import { authOptions, type BackendFields } from "../../../../lib/auth";
 import { getApiBase } from "../../../../lib/http";
 
 export async function POST(req: Request) {
@@ -10,7 +10,7 @@ export async function POST(req: Request) {
   const base = getApiBase();
   const res = await fetch(`${base}/api/v1/uploads/image`, {
     method: 'POST',
-    headers: { Authorization: `Bearer ${(session as any).backendAccessToken}` },
+    headers: { Authorization: `Bearer ${(session as BackendFields).backendAccessToken}` },
     body: form,
   });
   const data = await res.json().catch(() => ({}));
