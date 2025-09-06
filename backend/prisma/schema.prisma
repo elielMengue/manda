@@ -24,6 +24,7 @@ model User {
   Apprenant          Apprenant?
   Mentor             Mentor?
   Partenaire         Partenaire?
+  Admin              Admin?
   Posts              Post[]
   Notifications      Notification[]
   messagesSent       Message[]            @relation("SenderMessages")
@@ -74,6 +75,12 @@ model Partenaire {
   user             User           @relation(fields: [userId], references: [id])
   posts            Post[]
   notifications    Notification[]
+}
+
+model Admin {
+  id      Int @id @default(autoincrement())
+  userId  Int @unique
+  user    User @relation(fields: [userId], references: [id])
 }
 
 model Cours {

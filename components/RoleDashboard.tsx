@@ -7,19 +7,17 @@ interface RoleDashboardProps {
 }
 
 export default function RoleDashboard({ role, title, children }: RoleDashboardProps) {
-  const bg: Record<RoleDashboardProps["role"], string> = {
-    Admin: "bg-red-50",
-    Mentor: "bg-blue-50",
-    Apprenant: "bg-green-50",
-  };
-  const accent: Record<RoleDashboardProps["role"], string> = {
-    Admin: "text-red-700",
-    Mentor: "text-blue-700",
-    Apprenant: "text-green-700",
+  const colors: Record<RoleDashboardProps["role"], { bg: string; accent: string }> = {
+    Admin: { bg: "bg-red-50", accent: "text-red-700" },
+    Mentor: { bg: "bg-blue-50", accent: "text-blue-700" },
+    Apprenant: { bg: "bg-green-50", accent: "text-green-700" },
   };
   return (
-    <main className={`mx-auto max-w-5xl p-6 space-y-6 ${bg[role]}`}>
-      <h1 className={`text-2xl font-semibold ${accent[role]}`}>{title}</h1>
+    <main className="mx-auto max-w-5xl p-6 space-y-6">
+      <header className={`rounded-lg p-6 shadow-sm ${colors[role].bg}`}>
+        <h1 className={`text-2xl font-semibold ${colors[role].accent}`}>{title}</h1>
+        <p className="text-sm opacity-70">Bienvenue dans votre espace {role.toLowerCase()}.</p>
+      </header>
       {children}
     </main>
   );

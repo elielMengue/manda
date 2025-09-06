@@ -23,29 +23,29 @@ export default async function ApprenantDashboard() {
   const profile = await getMyProfile(token).catch(() => null);
   if (!profile?.apprenant) {
     return (
-      <RoleDashboard role="Apprenant" title="Espace Apprenant">
-        <div className="rounded-md border border-foreground/15 p-4">
-          <div className="text-sm opacity-80">Aucun profil Apprenant détecté.</div>
-          <Link href="/profile" className="mt-2 inline-flex h-9 px-3 items-center rounded-md border border-foreground/20 hover:bg-foreground/5 text-sm transition-colors">Créer mon profil</Link>
-        </div>
-      </RoleDashboard>
-    );
-  }
+        <RoleDashboard role="Apprenant" title="Espace Apprenant">
+          <div className="card p-4">
+            <div className="text-sm opacity-80">Aucun profil Apprenant détecté.</div>
+            <Link href="/profile" className="mt-2 inline-flex h-9 px-3 items-center rounded-md border border-foreground/20 hover:bg-foreground/5 text-sm transition-colors">Créer mon profil</Link>
+          </div>
+        </RoleDashboard>
+      );
+    }
   const inscriptions = await listMyInscriptions(token).catch(() => []);
   const avg = inscriptions.length ? Math.round(inscriptions.reduce((a, b) => a + b.progression, 0) / inscriptions.length) : 0;
 
   return (
     <RoleDashboard role="Apprenant" title="Espace Apprenant">
       <section className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-        <div className="rounded-md border border-foreground/15 p-4">
+        <div className="card p-4">
           <div className="text-xs opacity-60">Cours suivis</div>
           <div className="text-2xl font-semibold">{inscriptions.length}</div>
         </div>
-        <div className="rounded-md border border-foreground/15 p-4">
+        <div className="card p-4">
           <div className="text-xs opacity-60">Progression moyenne</div>
           <div className="text-2xl font-semibold">{avg}%</div>
         </div>
-        <div className="rounded-md border border-foreground/15 p-4">
+        <div className="card p-4">
           <div className="text-xs opacity-60">Notifications</div>
           <div className="text-2xl font-semibold">–</div>
         </div>
@@ -55,7 +55,7 @@ export default async function ApprenantDashboard() {
         <div className="text-sm opacity-70">Mes cours</div>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
           {inscriptions.slice(0, 6).map((ins) => (
-            <Link key={ins.id} href={`/courses/${ins.coursId}`} className="rounded-md border border-foreground/10 p-4 hover:bg-foreground/5 transition-colors">
+            <Link key={ins.id} href={`/courses/${ins.coursId}`} className="card p-4 hover:bg-foreground/5 transition-colors">
               <div className="font-medium line-clamp-2">{ins.cours.titre}</div>
               <div className="text-sm opacity-80 mt-1">Progression: {ins.progression}%</div>
             </Link>
