@@ -1,56 +1,56 @@
-# Manda
+﻿# Manda
 
-Manda est une plateforme éducative tout‑en‑un visant à démocratiser l’accès aux compétences numériques en Afrique. Elle permet aux jeunes d’apprendre, de se certifier et d’accéder à des opportunités professionnelles — le tout en ligne.
+Manda est une plateforme Ã©ducative toutâ€‘enâ€‘un visant Ã  dÃ©mocratiser lâ€™accÃ¨s aux compÃ©tences numÃ©riques en Afrique. Elle permet aux jeunes dâ€™apprendre, de se certifier et dâ€™accÃ©der Ã  des opportunitÃ©s professionnelles â€” le tout en ligne.
 
 ---
 
 ## Objectif du projet
 
-Donner aux jeunes, où qu’ils soient, les moyens de se former aux métiers du numérique, valider leurs compétences et entrer en contact avec des employeurs ou partenaires de projets à impact.
+Donner aux jeunes, oÃ¹ quâ€™ils soient, les moyens de se former aux mÃ©tiers du numÃ©rique, valider leurs compÃ©tences et entrer en contact avec des employeurs ou partenaires de projets Ã  impact.
 
 ---
 
-## Cas d’utilisation
+## Cas dâ€™utilisation
 
 - Apprenant
 
-  - S’inscrire et suivre des cours en ligne (vidéos, textes)
-  - Réaliser des projets pratiques
-  - Obtenir un certificat numérique
+  - Sâ€™inscrire et suivre des cours en ligne (vidÃ©os, textes)
+  - RÃ©aliser des projets pratiques
+  - Obtenir un certificat numÃ©rique
   - Suivre sa progression par module
-  - Accéder à des opportunités de stage ou d’emploi
+  - AccÃ©der Ã  des opportunitÃ©s de stage ou dâ€™emploi
 
 - Formateur
 
-  - Créer des cours et modules pédagogiques
-  - Ajouter des vidéos, textes, quiz et ressources
-  - Suivre la progression des étudiants
+  - CrÃ©er des cours et modules pÃ©dagogiques
+  - Ajouter des vidÃ©os, textes, quiz et ressources
+  - Suivre la progression des Ã©tudiants
 
 - Admin
 
-  - Gérer les utilisateurs, cours et statistiques
-  - Modérer les contenus
-  - Attribuer les rôles
+  - GÃ©rer les utilisateurs, cours et statistiques
+  - ModÃ©rer les contenus
+  - Attribuer les rÃ´les
 
 - Partenaire / Recruteur
-  - Publier des offres d’emploi ou de stage
-  - Rechercher des profils certifiés
+  - Publier des offres dâ€™emploi ou de stage
+  - Rechercher des profils certifiÃ©s
   - Contacter directement les talents
 
 ---
 
-## Fonctionnalités (roadmap)
+## FonctionnalitÃ©s (roadmap)
 
-- [ ] Authentification sécurisée (JWT)
-- [ ] Rôles et permissions (Admin, Étudiant, Formateur, Partenaire)
+- [ ] Authentification sÃ©curisÃ©e (JWT)
+- [ ] RÃ´les et permissions (Admin, Ã‰tudiant, Formateur, Partenaire)
 - [ ] Suivi des cours et modules
-- [ ] Création et édition de contenus pédagogiques
-- [ ] Génération de certificats PDF téléchargeables
-- [ ] Projets pratiques soumis par les étudiants
-- [ ] Tableau de bord personnalisé par rôle
+- [ ] CrÃ©ation et Ã©dition de contenus pÃ©dagogiques
+- [ ] GÃ©nÃ©ration de certificats PDF tÃ©lÃ©chargeables
+- [ ] Projets pratiques soumis par les Ã©tudiants
+- [ ] Tableau de bord personnalisÃ© par rÃ´le
 - [ ] Espace recruteur avec filtrage par certification
-- [ ] Messagerie interne étudiants‑formateurs
-- [ ] Classements et badges de réussite
+- [ ] Messagerie interne Ã©tudiantsâ€‘formateurs
+- [ ] Classements et badges de rÃ©ussite
 - [ ] API publique pour partenaires tiers
 
 ---
@@ -59,9 +59,9 @@ Donner aux jeunes, où qu’ils soient, les moyens de se former aux métiers du 
 
 - Frontend: Next.js, Tailwind CSS, TypeScript
 - Backend: Railway (PostgreSQL), API custom (JWT)
-- Base de données: PostgreSQL + Prisma
+- Base de donnÃ©es: PostgreSQL + Prisma
 - UI/UX: shadcn/ui, Lucide Icons
-- Déploiement: Vercel (frontend) + Railway (backend)
+- DÃ©ploiement: Vercel (frontend) + Railway (backend)
 - Diagrammes & Docs: Draw.io, Figma
 
 ---
@@ -70,44 +70,62 @@ Donner aux jeunes, où qu’ils soient, les moyens de se former aux métiers du 
 
 ```mermaid
 flowchart TD
-    A[Utilisateur] -->|Accède| B[Frontend - Next.js]
+    A[Utilisateur] -->|AccÃ¨de| B[Frontend - Next.js]
     B --> C[Auth]
     B --> D[PostgreSQL - Railway]
     C --> E[API / Middleware Auth]
     D --> E
-    E -->|Données filtrées| B
+    E -->|DonnÃ©es filtrÃ©es| B
 ```
 
 ---
 
-## Démarrage rapide
+## DÃ©marrage rapide
 
-- Prérequis: Node 18+, NPM/PNPM, PostgreSQL (Railway ou local)
+- PrÃ©requis: Node 18+, NPM/PNPM, PostgreSQL (Railway ou local)
 - Installation:
   - Copier `.env.example` vers `.env` et renseigner `DATABASE_URL` et `JWT_SECRET`.
-  - Générer le client Prisma: `npm run prisma:generate`
-  - Pousser le schéma en base: `npm run prisma:push` (ou `npm run prisma:migrate` en dev)
-  - Lancer l’app: `npm run dev`
+  - GÃ©nÃ©rer le client Prisma: `npm run prisma:generate`
+  - Pousser le schÃ©ma en base: `npm run prisma:push` (ou `npm run prisma:migrate` en dev)
+  - Lancer lâ€™app: `npm run dev`
 
 Endpoints utiles:
 
-- GET `/api/health` — statut rapide de l’application
+- GET `/api/health` â€” statut rapide de lâ€™application
 
 ---
 
-## Prochaines étapes (Backend)
+## Prochaines Ã©tapes (Backend)
 
-- Choix d’architecture:
-  - A) API dédiée sur Railway (Express/Nest + JWT) — Front Next.js consomme l’API
-  - B) API intégrée (Next.js Route Handlers `app/api`) — plus simple, déploiement unique
-- À valider: préférence A ou B, flux auth (signup, login, refresh), gestion des rôles.
-- Implémenter ensuite: Auth JWT + rôles, CRUD de base (Users, Cours, Modules…), suivi de progression, messagerie.
+- Choix dâ€™architecture:
+  - A) API dÃ©diÃ©e sur Railway (Express/Nest + JWT) â€” Front Next.js consomme lâ€™API
+  - B) API intÃ©grÃ©e (Next.js Route Handlers `app/api`) â€” plus simple, dÃ©ploiement unique
+- Ã€ valider: prÃ©fÃ©rence A ou B, flux auth (signup, login, refresh), gestion des rÃ´les.
+- ImplÃ©menter ensuite: Auth JWT + rÃ´les, CRUD de base (Users, Cours, Modulesâ€¦), suivi de progression, messagerie.
 
 ---
 
-## Développement
+## DÃ©veloppement
 
-- Prisma: schéma sous `prisma/schema.prisma`, migrations sous `prisma/migrations`
+- Prisma: schÃ©ma sous `prisma/schema.prisma`, migrations sous `prisma/migrations`
 - Client Prisma unique via `lib/prisma.ts`
-- Tailwind v4 activé via `app/globals.css`
-- Endpoint santé: `app/api/health/route.ts`
+- Tailwind v4 activÃ© via `app/globals.css`
+- Endpoint santÃ©: `app/api/health/route.ts`
+
+---
+
+## Backend (Architecture A)
+
+- Code API: `backend/`
+- DÃ©marrer en local:
+  - `cd backend`
+  - `npm install`
+  - `cp .env.example .env` et renseigner `DATABASE_URL`, `JWT_SECRET`, `CORS_ORIGIN`
+  - `npm run prisma:generate`
+  - (optionnel) `npm run prisma:migrate` ou `prisma db push`
+  - `npm run dev` puis ouvrir `http://localhost:8080/health`
+- DÃ©ploiement Railway (free):
+  - CrÃ©er un projet, ajouter un service PostgreSQL (Railway gÃ¨re `DATABASE_URL`)
+  - DÃ©ployer le dossier `backend/` (monorepo) et dÃ©finir `CORS_ORIGIN` et `JWT_SECRET`
+  - VÃ©rifier `GET /health` sur le domaine public Railway
+
