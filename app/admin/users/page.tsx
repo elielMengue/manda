@@ -1,6 +1,7 @@
 import { getServerSession } from "next-auth";
 import { authOptions, type BackendFields } from "../../../lib/auth";
 import { redirect } from "next/navigation";
+import Link from "next/link";
 import AdminUsersTable, { type User } from "../../../components/AdminUsersTable";
 import BackLink from "../../../components/BackLink";
 
@@ -28,7 +29,14 @@ export default async function AdminUsersPage() {
         <BackLink href="/admin" />
       </div>
       <div>
-        <a href="/api/admin/users/export" className="btn-outline h-8 text-xs">Exporter CSV</a>
+        <Link
+          href="/api/admin/users/export"
+          className="btn-outline h-8 text-xs"
+          download
+          prefetch={false}
+        >
+          Exporter CSV
+        </Link>
       </div>
       {error ? (
         <div className="rounded-md border border-red-500/40 p-3 text-sm">{error}</div>

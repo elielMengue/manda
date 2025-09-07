@@ -7,10 +7,13 @@ export async function GET() {
   const session = await getServerSession(authOptions);
   if (!session) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   try {
-    const data = await jsonFetch(`/api/v1/mentors`, { token: (session as any).backendAccessToken });
+    const data = await jsonFetch(`/api/v1/mentors`, {
+      token: (session as { backendAccessToken?: string }).backendAccessToken,
+    });
     return NextResponse.json(data);
-  } catch (e: any) {
-    return NextResponse.json({ error: e?.message || 'Erreur' }, { status: e?.status || 500 });
+  } catch (e: unknown) {
+    const err = e as { message?: string; status?: number };
+    return NextResponse.json({ error: err.message || 'Erreur' }, { status: err.status || 500 });
   }
 }
 

@@ -65,11 +65,20 @@ export default async function AdminHome() {
 }
 
 async function Kpi({ label, apiKey }: { label: string; apiKey: string }) {
-  let value: any = '—';
+  let value = '—';
   try {
     const res = await fetch(`/api/admin/metrics`, { cache: 'no-store' });
-    const data = await res.json();
-    value = apiKey.split('.').reduce((acc: any, k: string) => (acc ? acc[k] : undefined), data) ?? '—';
+    const data: Record<string, unknown> = await res.json();
+    const resolved = apiKey
+      .split('.')
+      .reduce<unknown>(
+        (acc, k) =>
+          typeof acc === 'object' && acc !== null ? (acc as Record<string, unknown>)[k] : undefined,
+        data,
+      );
+    if (typeof resolved === 'string' || typeof resolved === 'number') {
+      value = String(resolved);
+    }
   } catch {}
   return (
     <div className="card p-4">
