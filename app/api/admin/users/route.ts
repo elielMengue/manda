@@ -6,11 +6,15 @@ import { jsonFetch } from "../../../../lib/http";
 export async function GET() {
   const session = await getServerSession(authOptions);
   if (!session) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+  const { backendAccessToken } = session as { backendAccessToken?: string };
   try {
-    const data = await jsonFetch(`/api/v1/users`, { token: (session as unknown).backendAccessToken });
+    const data = await jsonFetch(`/api/v1/users`, { token: backendAccessToken });
     return NextResponse.json(data);
   } catch (e: unknown) {
-    return NextResponse.json({ error: (e as { message?: string })?.message || 'Erreur' }, { status: e?.status || 500 });
+    return NextResponse.json(
+      { error: (e as { message?: string })?.message || 'Erreur' },
+      { status: e?.status || 500 }
+    );
   }
 }
 
