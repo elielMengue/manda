@@ -27,11 +27,22 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: 'role invalide' }, { status: 400 });
   }
   try {
-    const reg = await jsonFetch(`/api/v1/auth/register`, {
-      method: 'POST',
-      body: { firstName, lastName, email, password, address, phone, photoUrl },
-    });
-    const userId = reg?.user?.id;
+    const reg = await jsonFetch<{ user?: { id?: string } }>(
+      `/api/v1/auth/register`,
+      {
+        method: 'POST',
+        body: {
+          firstName,
+          lastName,
+          email,
+          password,
+          address,
+          phone,
+          photoUrl,
+        },
+      }
+    );
+    const userId = reg.user?.id;
     if (!userId)
       return NextResponse.json(
         { error: 'Création utilisateur échouée' },
