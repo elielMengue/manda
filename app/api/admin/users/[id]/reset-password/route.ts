@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { getServerSession } from "next-auth";
-import { authOptions } from "../../../../../../lib/auth";
+import { authOptions, BackendFields } from "../../../../../../lib/auth";
 import { jsonFetch } from "../../../../../../lib/http";
 
 export async function POST(req: Request, { params }: { params: Promise<{ id: string }> }) {
@@ -9,10 +9,10 @@ export async function POST(req: Request, { params }: { params: Promise<{ id: str
   const { id } = await params;
   const body = await req.json();
   try {
-    const data = await jsonFetch(`/api/v1/admin/users/${Number(id)}/reset-password`, { method: 'POST', token: (session as any).backendAccessToken, body });
+    const data = await jsonFetch(`/api/v1/admin/users/${Number(id)}/reset-password`, { method: 'POST', token: (session as BackendFields).backendAccessToken, body });
     return NextResponse.json(data);
-  } catch (e: any) {
-    return NextResponse.json({ error: e?.message || 'Erreur' }, { status: e?.status || 500 });
+  } catch (e: unknown) {
+    const err = e as { status?: number; message?: string } | undefined;
+    return NextResponse.json({ error: err?.message || 'Erreur' }, { status: err?.status ?? 500 });
   }
 }
-

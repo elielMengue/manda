@@ -7,7 +7,8 @@ export async function POST(req: Request) {
     const data = await jsonFetch(`/api/v1/auth/password/reset`, { method: 'POST', body: { token, password } });
     return NextResponse.json(data);
   } catch (e: unknown) {
-    return NextResponse.json({ error: (e as { message?: string })?.message || 'Erreur' }, { status: e?.status || 500 });
+    const err = e as { status?: number; message?: string } | undefined;
+    return NextResponse.json({ error: err?.message || 'Erreur' }, { status: err?.status ?? 500 });
   }
 }
 

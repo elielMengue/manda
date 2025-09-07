@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { getServerSession } from "next-auth";
-import { authOptions } from "../../../../lib/auth";
+import { authOptions, BackendFields } from "../../../../lib/auth";
 import { jsonFetch } from "../../../../lib/http";
 
 export async function POST(req: Request) {
@@ -10,12 +10,13 @@ export async function POST(req: Request) {
   try {
     const out = await jsonFetch(`/api/v1/profiles/apprenant`, {
       method: 'POST',
-      token: (session as unknown).backendAccessToken,
+      token: (session as BackendFields).backendAccessToken,
       body,
     });
     return NextResponse.json(out);
   } catch (e: unknown) {
-    return NextResponse.json({ error: (e as { message?: string })?.message || 'Erreur' }, { status: e?.status || 500 });
+    const err = e as { status?: number; message?: string } | undefined;
+    return NextResponse.json({ error: err?.message || 'Erreur' }, { status: err?.status ?? 500 });
   }
 }
 

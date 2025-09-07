@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { getServerSession } from "next-auth";
-import { authOptions } from "../../../../lib/auth";
+import { authOptions, BackendFields } from "../../../../lib/auth";
 import { jsonFetch } from "../../../../lib/http";
 
 export async function PATCH(req: Request, { params }: { params: Promise<{ id: string }> }) {
@@ -10,9 +10,9 @@ export async function PATCH(req: Request, { params }: { params: Promise<{ id: st
   const respId = Number(id);
   const body = await req.json();
   try {
-    const data = await jsonFetch(`/api/v1/reponses/${respId}`, { method: 'PATCH', token: (session as unknown).backendAccessToken, body });
+    const data = await jsonFetch(`/api/v1/reponses/${respId}`, { method: 'PATCH', token: (session as BackendFields).backendAccessToken, body });
     return NextResponse.json(data);
-  } catch (e: unknown) { return NextResponse.json({ error: (e as { message?: string })?.message || 'Erreur' }, { status: e?.status || 500 }); }
+  } catch (e: unknown) { const err = e as { status?: number; message?: string } | undefined; return NextResponse.json({ error: err?.message || 'Erreur' }, { status: err?.status ?? 500 }); }
 }
 
 export async function DELETE(_req: Request, { params }: { params: Promise<{ id: string }> }) {
@@ -21,8 +21,8 @@ export async function DELETE(_req: Request, { params }: { params: Promise<{ id: 
   const { id } = await params;
   const respId = Number(id);
   try {
-    const data = await jsonFetch(`/api/v1/reponses/${respId}`, { method: 'DELETE', token: (session as unknown).backendAccessToken });
+    const data = await jsonFetch(`/api/v1/reponses/${respId}`, { method: 'DELETE', token: (session as BackendFields).backendAccessToken });
     return NextResponse.json(data);
-  } catch (e: unknown) { return NextResponse.json({ error: (e as { message?: string })?.message || 'Erreur' }, { status: e?.status || 500 }); }
+  } catch (e: unknown) { const err = e as { status?: number; message?: string } | undefined; return NextResponse.json({ error: err?.message || 'Erreur' }, { status: err?.status ?? 500 }); }
 }
 

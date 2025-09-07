@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { getServerSession } from "next-auth";
-import { authOptions } from "../../../../../lib/auth";
+import { authOptions, BackendFields } from "../../../../../lib/auth";
 import { getApiBase } from "../../../../../lib/http";
 
 export async function GET() {
@@ -8,7 +8,7 @@ export async function GET() {
   if (!session) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   const base = getApiBase();
   const res = await fetch(`${base}/api/v1/admin/users/export`, {
-    headers: { Authorization: `Bearer ${(session as any).backendAccessToken}` },
+    headers: { Authorization: `Bearer ${(session as BackendFields).backendAccessToken}` },
     cache: 'no-store',
   });
   const text = await res.text();
