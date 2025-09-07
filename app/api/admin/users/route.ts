@@ -11,9 +11,10 @@ export async function GET() {
     const data = await jsonFetch(`/api/v1/users`, { token: backendAccessToken });
     return NextResponse.json(data);
   } catch (e: unknown) {
+    const { message, status } = e as { message?: string; status?: number };
     return NextResponse.json(
-      { error: (e as { message?: string })?.message || 'Erreur' },
-      { status: e?.status || 500 }
+      { error: message || 'Erreur' },
+      { status: status || 500 }
     );
   }
 }
