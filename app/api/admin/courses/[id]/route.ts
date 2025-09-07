@@ -9,10 +9,15 @@ export async function PATCH(req: Request, { params }: { params: Promise<{ id: st
   const { id } = await params;
   const body = await req.json();
   try {
-    const data = await jsonFetch(`/api/v1/cours/${Number(id)}`, { method: 'PATCH', token: (session as any).backendAccessToken, body });
+    const data = await jsonFetch(`/api/v1/cours/${Number(id)}`, {
+      method: 'PATCH',
+      token: (session as { backendAccessToken?: string }).backendAccessToken,
+      body,
+    });
     return NextResponse.json(data);
-  } catch (e: any) {
-    return NextResponse.json({ error: e?.message || 'Erreur' }, { status: e?.status || 500 });
+  } catch (e: unknown) {
+    const err = e as { message?: string; status?: number };
+    return NextResponse.json({ error: err.message || 'Erreur' }, { status: err.status || 500 });
   }
 }
 
@@ -21,10 +26,14 @@ export async function DELETE(_req: Request, { params }: { params: Promise<{ id: 
   if (!session) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   const { id } = await params;
   try {
-    const data = await jsonFetch(`/api/v1/cours/${Number(id)}`, { method: 'DELETE', token: (session as any).backendAccessToken });
+    const data = await jsonFetch(`/api/v1/cours/${Number(id)}`, {
+      method: 'DELETE',
+      token: (session as { backendAccessToken?: string }).backendAccessToken,
+    });
     return NextResponse.json(data);
-  } catch (e: any) {
-    return NextResponse.json({ error: e?.message || 'Erreur' }, { status: e?.status || 500 });
+  } catch (e: unknown) {
+    const err = e as { message?: string; status?: number };
+    return NextResponse.json({ error: err.message || 'Erreur' }, { status: err.status || 500 });
   }
 }
 

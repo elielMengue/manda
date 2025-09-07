@@ -2,7 +2,6 @@
 
 import { useState } from 'react';
 import { toast } from '../lib/toast';
-import Image from 'next/image';
 
 type MePatch = { firstName?: string; lastName?: string; address?: string; phone?: string; photoUrl?: string };
 

@@ -9,7 +9,6 @@ import RoleDashboard from "../../components/RoleDashboard";
 import Link from "next/link";
 import BackLink from "../../components/BackLink";
 import MentorNav from "../../components/MentorNav";
-import DuplicateCourseButton from "../../components/DuplicateCourseButton";
 
 interface SessionWithToken extends Session {
   backendAccessToken?: string;
@@ -86,7 +85,7 @@ export default async function MentorDashboard() {
             );
           })}
           {published.length === 0 && (
-            <div className="text-sm opacity-70">Aucun cours publié pour l'instant. Modifiez un cours en « published » pour l'afficher ici.</div>
+            <div className="text-sm opacity-70">Aucun cours publié pour l&apos;instant. Modifiez un cours en « published » pour l&apos;afficher ici.</div>
           )}
         </div>
       </section>
@@ -101,7 +100,7 @@ export default async function MentorDashboard() {
               <div className="text-sm opacity-80 line-clamp-2">{p.content}</div>
             </div>
           ))}
-          {posts.length === 0 && <div className="text-sm opacity-70">Aucun post pour l'instant.</div>}
+          {posts.length === 0 && <div className="text-sm opacity-70">Aucun post pour l&apos;instant.</div>}
         </div>
       </section>
     </RoleDashboard>
