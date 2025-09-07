@@ -1,1 +1,2 @@
+# Exclude the backend server from the Vercel build
 backend/
